@@ -6,23 +6,24 @@ const dict = {
   'Guardian Dashboard': 1,
   'The guardian dashboard is ready': 2,
   'The guardian dashboard is not ready': 3,
+  'Bitcoin backend is not configured — run the Bitcoin Configuration task': 16,
+  'Bitcoind cookie is missing': 18,
+  'Bitcoind cookie is malformed': 19,
 
   // interfaces.ts
   'Guardian Interface': 4,
   'Initial setup and dashboard for this guardian': 5,
 
-  // actions/config.ts
-  'Configuration': 6,
-  'Configure Fedimint settings': 7,
+  // actions/configBitcoin.ts
+  'Bitcoin Configuration': 6,
+  "Configure the Guardian's Bitcoin backend": 7,
   'Bitcoin Backend': 8,
-  'Choose how Fedimint connects to the Bitcoin network': 9,
-  'Bitcoin Core (Recommended)': 10,
-  'Esplora': 11,
+  'Choose how the Guardian connects to the Bitcoin network': 9,
+  'Local node (recommended)': 10,
+  Esplora: 11,
   'Esplora API URL': 12,
   'The URL of the Esplora API to use': 13,
-  'Rust Log Directives': 14,
-  'Rust logging directives. Only modify if debugging.': 15,
-  'Advanced Settings': 16,
+  'Must be a valid HTTP(S) URL': 14,
 
   // init/tasksOnInstall.ts
   'Fedimint needs to know which Bitcoin backend to use': 17,
