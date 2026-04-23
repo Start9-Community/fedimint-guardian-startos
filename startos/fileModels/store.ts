@@ -1,6 +1,5 @@
 import { FileHelper } from '@start9labs/start-sdk'
 import { sdk } from '../sdk'
-import { DEFAULT_RUST_LOG } from '../utils'
 import { z } from 'zod'
 
 const bitcoindVariant = z.object({
@@ -21,7 +20,6 @@ const bitcoinBackend = z
 
 const shape = z.object({
   bitcoinBackend,
-  rustLog: z.string().catch(DEFAULT_RUST_LOG),
 })
 
 export const storeJson = FileHelper.json(

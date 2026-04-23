@@ -1,4 +1,4 @@
 import { sdk } from '../sdk'
-import { config } from './config'
+import { configBitcoin } from './configBitcoin'
 
-export const actions = sdk.Actions.of().addAction(config)
+export const actions = sdk.Actions.of().addAction(configBitcoin)

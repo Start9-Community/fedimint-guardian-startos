@@ -3,21 +3,20 @@ import {
   Value,
   Variants,
 } from '@start9labs/start-sdk/base/lib/actions/input/builder'
-import { sdk } from '../sdk'
-import { i18n } from '../i18n'
 import { storeJson } from '../fileModels/store'
-import { DEFAULT_RUST_LOG } from '../utils'
+import { i18n } from '../i18n'
+import { sdk } from '../sdk'
 
 const inputSpec = InputSpec.of({
   bitcoinBackend: Value.union({
     name: i18n('Bitcoin Backend'),
     description: i18n(
-      'Choose how Fedimint connects to the Bitcoin network',
+      'Choose how the Guardian connects to the Bitcoin network',
     ),
     default: 'bitcoind',
     variants: Variants.of({
       bitcoind: {
-        name: i18n('Bitcoin Core (Recommended)'),
+        name: i18n('Local node (recommended)'),
         spec: InputSpec.of({}),
       },
       esplora: {
@@ -31,7 +30,7 @@ const inputSpec = InputSpec.of({
             patterns: [
               {
                 regex: '^https?://.*',
-                description: 'Must be a valid HTTP(S) URL',
+                description: i18n('Must be a valid HTTP(S) URL'),
               },
             ],
           }),
@@ -39,34 +38,17 @@ const inputSpec = InputSpec.of({
       },
     }),
   }),
-  advanced: Value.object(
-    {
-      name: i18n('Advanced Settings'),
-    },
-    InputSpec.of({
-      rustLog: Value.text({
-        name: i18n('Rust Log Directives'),
-        description: i18n(
-          'Rust logging directives. Only modify if debugging.',
-        ),
-        required: true,
-        default: DEFAULT_RUST_LOG,
-      }),
-    }),
-  ),
 })
 
-type ConfigInput = typeof inputSpec._TYPE
-
-export const config = sdk.Action.withInput(
-  'config',
+export const configBitcoin = sdk.Action.withInput(
+  'config-bitcoin',
   async ({ effects }) => ({
-    name: i18n('Configuration'),
-    description: i18n('Configure Fedimint settings'),
+    name: i18n('Bitcoin Configuration'),
+    description: i18n("Configure the Guardian's Bitcoin backend"),
     warning: null,
     allowedStatuses: 'any',
     group: null,
-    visibility: 'enabled' as const,
+    visibility: 'enabled',
   }),
   inputSpec,
   async ({ effects }) => {
@@ -80,9 +62,6 @@ export const config = sdk.Action.withInput(
               value: { url: store.bitcoinBackend.url },
             }
           : { selection: 'bitcoind' as const, value: {} },
-      advanced: {
-        rustLog: store.rustLog,
-      },
     }
   },
   async ({ effects, input }) => {
@@ -94,9 +73,6 @@ export const config = sdk.Action.withInput(
           }
         : { type: 'bitcoind' as const }
 
-    await storeJson.merge(effects, {
-      bitcoinBackend,
-      rustLog: input.advanced.rustLog,
-    })
+    await storeJson.merge(effects, { bitcoinBackend })
   },
 )

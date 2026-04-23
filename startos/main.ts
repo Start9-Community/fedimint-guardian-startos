@@ -1,29 +1,28 @@
 import { FileHelper } from '@start9labs/start-sdk'
+import { manifest as bitcoinManifest } from 'bitcoin-core-startos/startos/manifest'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
 import { storeJson } from './fileModels/store'
-import { DEFAULT_RUST_LOG, uiPort } from './utils'
+import { uiPort } from './utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   console.info(i18n('Starting Fedimint!'))
 
   const store = await storeJson.read().const(effects)
-
   if (!store?.bitcoinBackend) {
     throw new Error(
-      'Bitcoin backend is not configured — run the Configuration task',
+      i18n(
+        'Bitcoin backend is not configured — run the Bitcoin Configuration task',
+      ),
     )
   }
-
-  const bitcoinBackend = store.bitcoinBackend
-  const rustLog = store.rustLog ?? DEFAULT_RUST_LOG
+  const { bitcoinBackend } = store
 
   const env: Record<string, string> = {
     FM_DATA_DIR: '/fedimintd',
     FM_BITCOIN_NETWORK: 'bitcoin',
     FM_BIND_UI: `0.0.0.0:${uiPort}`,
     FM_ENABLE_IROH: 'true',
-    RUST_LOG: rustLog,
     // Disable Arti's fs-mistrust permission checks. These invoke
     // getpwuid/getpwnam via libc, which reads /etc/passwd. The Dockerfile
     // materializes the upstream's /etc/passwd symlink, but this is a
@@ -32,7 +31,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     FS_MISTRUST_DISABLE_PERMISSIONS_CHECKS: 'true',
   }
 
-  const mounts = sdk.Mounts.of()
+  let mounts = sdk.Mounts.of()
     .mountVolume({
       volumeId: 'main',
       subpath: null,
@@ -47,15 +46,13 @@ export const main = sdk.setupMain(async ({ effects }) => {
     })
 
   if (bitcoinBackend.type === 'bitcoind') {
-    mounts.mountDependency({
+    mounts = mounts.mountDependency<typeof bitcoinManifest>({
       dependencyId: 'bitcoind',
       volumeId: 'main',
       subpath: null,
       mountpoint: '/mnt/bitcoin',
       readonly: true,
     })
-    env.FM_BITCOIND_URL = 'http://bitcoind.startos:8332'
-    env.FM_BITCOIND_COOKIE_FILE = '/mnt/bitcoin/.cookie'
   } else {
     env.FM_ESPLORA_URL = bitcoinBackend.url
   }
@@ -67,11 +64,24 @@ export const main = sdk.setupMain(async ({ effects }) => {
     'fedimintd-sub',
   )
 
-  // Restart if Bitcoin cookie changes
   if (bitcoinBackend.type === 'bitcoind') {
-    await FileHelper.string(`${fedimintdSubc.rootfs}/mnt/bitcoin/.cookie`)
+    // Re-read (and restart) when bitcoind rotates the cookie
+    const cookieRaw = await FileHelper.string(
+      `${fedimintdSubc.rootfs}/mnt/bitcoin/.cookie`,
+    )
       .read()
       .const(effects)
+    if (!cookieRaw) {
+      throw new Error(i18n('Bitcoind cookie is missing'))
+    }
+    const cookie = cookieRaw.trim()
+    const sep = cookie.indexOf(':')
+    if (sep < 0) {
+      throw new Error(i18n('Bitcoind cookie is malformed'))
+    }
+    env.FM_BITCOIND_URL = 'http://bitcoind.startos:8332'
+    env.FM_BITCOIND_USERNAME = cookie.slice(0, sep)
+    env.FM_BITCOIND_PASSWORD = cookie.slice(sep + 1)
   }
 
   return sdk.Daemons.of(effects).addDaemon('fedimintd', {
