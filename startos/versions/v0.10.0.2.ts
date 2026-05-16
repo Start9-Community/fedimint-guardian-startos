@@ -13,11 +13,11 @@ type OldConfig = {
   }
 }
 
-export const v_0_10_0_1 = VersionInfo.of({
-  version: '0.10.0:1',
+export const v_0_10_0_2 = VersionInfo.of({
+  version: '0.10.0:2',
   releaseNotes: {
-    en_US:
-      'Rewritten on the StartOS SDK. Migrates the bitcoin-backend choice from 0.3.5.1. Bitcoin Core is now authenticated via its cookie file — the old RPC username/password is no longer needed.',
+    en_US: `- Adds an in-app Instructions tab
+- Internal updates (start-sdk 1.5.1)`,
   },
   migrations: {
     up: async ({ effects }) => {
