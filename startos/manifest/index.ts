@@ -5,7 +5,7 @@ export const manifest = setupManifest({
   id: 'fedimint-guardian',
   title: 'Fedimint Guardian',
   license: 'MIT',
-  packageRepo: 'https://github.com/Start9Labs/fedimint-startos',
+  packageRepo: 'https://github.com/Start9-Community/fedimint-guardian-startos',
   upstreamRepo: 'https://github.com/fedimint/fedimint',
   marketingUrl: 'https://fedimint.org/',
   donationUrl: null,
