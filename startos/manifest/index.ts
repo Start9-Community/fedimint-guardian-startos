@@ -2,7 +2,7 @@ import { setupManifest } from '@start9labs/start-sdk'
 import { depBitcoindDescription, long, short } from './i18n'
 
 export const manifest = setupManifest({
-  id: 'fedimint-guardian',
+  id: 'fedimintd',
   title: 'Fedimint Guardian',
   license: 'MIT',
   packageRepo: 'https://github.com/Start9-Community/fedimint-guardian-startos',
