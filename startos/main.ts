@@ -1,9 +1,10 @@
 import { FileHelper } from '@start9labs/start-sdk'
 import { manifest as bitcoinManifest } from 'bitcoin-core-startos/startos/manifest'
+import { rpcHostId, rpcPort } from 'bitcoin-core-startos/startos/utils'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
 import { storeJson } from './fileModels/store'
-import { bitcoindRpcUrl, uiPort } from './utils'
+import { bridgeAddress, uiPort } from './utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   console.info(i18n('Starting Fedimint!'))
@@ -65,8 +66,17 @@ export const main = sdk.setupMain(async ({ effects }) => {
   )
 
   if (bitcoinBackend.type === 'bitcoind') {
-    const rpcUrl = await bitcoindRpcUrl(effects)
-    if (!rpcUrl) {
+    // bitcoind's RPC bridge address. The mapped string only changes when the
+    // assigned port does, so this .const() heals on bitcoind
+    // install/uninstall/port-change and never restarts on bitcoind updates.
+    // null => bitcoind not yet on the internal network (the cookie read below
+    // would fail anyway); .const() re-fires and heals once it appears.
+    const bitcoindAddr = await bridgeAddress(effects, {
+      packageId: 'bitcoind',
+      hostId: rpcHostId,
+      internalPort: rpcPort,
+    }).const()
+    if (!bitcoindAddr) {
       throw new Error(
         i18n('Bitcoin Core is not yet reachable on the internal network'),
       )
@@ -84,7 +94,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     if (sep < 0) {
       throw new Error(i18n('Bitcoind cookie is malformed'))
     }
-    env.FM_BITCOIND_URL = rpcUrl
+    env.FM_BITCOIND_URL = `http://${bitcoindAddr}`
     env.FM_BITCOIND_USERNAME = cookie.slice(0, sep)
     env.FM_BITCOIND_PASSWORD = cookie.slice(sep + 1)
   }

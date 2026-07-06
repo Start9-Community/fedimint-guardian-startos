@@ -1,32 +1,55 @@
 import { T } from '@start9labs/start-sdk'
-import {
-  rpcHostId as btcRpcHostId,
-  rpcInterfaceId as btcRpcInterfaceId,
-} from 'bitcoin-core-startos/startos/utils'
 import { sdk } from './sdk'
 
 export const uiPort = 8175
 
 /**
- * bitcoind's RPC URL over the LXC bridge (replaces the static
- * `http://bitcoind.startos:8332`). The map fn returns only the resolved URL so
- * `.const()` re-fires only when the address changes; `null` when bitcoind isn't
- * yet reachable on the internal network.
+ * Bridge address (`10.0.3.1:<assigned external port>`) of a dependency's
+ * binding, as a minimal reactive value. Chain `.const()` in main: the mapped
+ * string only changes when the address itself does, so main restarts exactly
+ * on dependency install/uninstall/port-change and never on dependency
+ * updates. Chain `.once()` in an action context. `fallbackPort` keeps the
+ * value non-null while the dependency is absent — sanctioned only for tor's
+ * allocator-guaranteed SOCKS 9050. Drop-in for the planned SDK
+ * `sdk.host.getBridgeAddress` helper.
  */
-export const bitcoindRpcUrl = (effects: T.Effects) =>
-  sdk.host
-    .get(effects, { hostId: btcRpcHostId, packageId: 'bitcoind' }, (host) => {
-      const iface =
-        host &&
-        Object.values(host.bindings)
-          .flatMap((b) => Object.values(b.interfaces))
-          .find((i) => i.id === btcRpcInterfaceId)
-      const rpc = iface?.addressInfo
-        .filter({
-          kind: 'bridge',
-          predicate: (h) => !h.ssl && h.metadata.kind === 'ipv4',
-        })
-        .hostnames[0]
-      return rpc ? `http://${rpc.hostname}:${rpc.port}` : null
-    })
-    .const()
+export function bridgeAddress(
+  effects: T.Effects,
+  opts: {
+    packageId: string
+    hostId: string
+    internalPort: number
+    fallbackPort: number
+  },
+): { const(): Promise<string>; once(): Promise<string> }
+export function bridgeAddress(
+  effects: T.Effects,
+  opts: { packageId: string; hostId: string; internalPort: number },
+): { const(): Promise<string | null>; once(): Promise<string | null> }
+export function bridgeAddress(
+  effects: T.Effects,
+  opts: {
+    packageId: string
+    hostId: string
+    internalPort: number
+    fallbackPort?: number
+  },
+) {
+  const watchable = async () => {
+    const osIp = await sdk.getOsIp(effects)
+    return sdk.host.get(
+      effects,
+      { packageId: opts.packageId, hostId: opts.hostId },
+      (host) => {
+        const port =
+          host?.bindings[opts.internalPort]?.net.assignedPort ??
+          opts.fallbackPort
+        return port != null ? `${osIp}:${port}` : null
+      },
+    )
+  }
+  return {
+    const: async () => (await watchable()).const(),
+    once: async () => (await watchable()).once(),
+  }
+}
