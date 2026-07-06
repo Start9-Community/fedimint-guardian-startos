@@ -9,7 +9,7 @@ const dict = {
   'Bitcoin backend is not configured — run the Bitcoin Configuration task': 16,
   'Bitcoind cookie is missing': 18,
   'Bitcoind cookie is malformed': 19,
-  'Bitcoin Core is not yet reachable on the internal network': 20,
+  'Bitcoin is not yet reachable on the internal network': 20,
 
   // interfaces.ts
   'Guardian Interface': 4,
