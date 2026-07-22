@@ -1,9 +1,10 @@
 import { FileHelper } from '@start9labs/start-sdk'
 import { manifest as bitcoinManifest } from 'bitcoin-core-startos/startos/manifest'
+import { rpcHostId, rpcPort } from 'bitcoin-core-startos/startos/utils'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
 import { storeJson } from './fileModels/store'
-import { uiPort } from './utils'
+import { bridgeAddress, uiPort } from './utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   console.info(i18n('Starting Fedimint!'))
@@ -57,7 +58,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     env.FM_ESPLORA_URL = bitcoinBackend.url
   }
 
-  const fedimintdSubc = await sdk.SubContainer.of(
+  const fedimintdSubc = sdk.SubContainer.of(
     effects,
     { imageId: 'fedimintd' },
     mounts,
@@ -65,10 +66,24 @@ export const main = sdk.setupMain(async ({ effects }) => {
   )
 
   if (bitcoinBackend.type === 'bitcoind') {
+    // bitcoind's RPC bridge address. The mapped string only changes when the
+    // assigned port does, so this .const() heals on bitcoind
+    // install/uninstall/port-change and never restarts on bitcoind updates.
+    // null => bitcoind not yet on the internal network (the cookie read below
+    // would fail anyway); .const() re-fires and heals once it appears.
+    const bitcoindAddr = await bridgeAddress(effects, {
+      packageId: 'bitcoind',
+      hostId: rpcHostId,
+      internalPort: rpcPort,
+    }).const()
+    if (!bitcoindAddr) {
+      throw new Error(
+        i18n('Bitcoin is not yet reachable on the internal network'),
+      )
+    }
     // Re-read (and restart) when bitcoind rotates the cookie
-    const cookieRaw = await FileHelper.string(
-      `${fedimintdSubc.rootfs}/mnt/bitcoin/.cookie`,
-    )
+    const rootfs = await fedimintdSubc.rootfs
+    const cookieRaw = await FileHelper.string(`${rootfs}/mnt/bitcoin/.cookie`)
       .read()
       .const(effects)
     if (!cookieRaw) {
@@ -79,7 +94,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     if (sep < 0) {
       throw new Error(i18n('Bitcoind cookie is malformed'))
     }
-    env.FM_BITCOIND_URL = 'http://bitcoind.startos:8332'
+    env.FM_BITCOIND_URL = `http://${bitcoindAddr}`
     env.FM_BITCOIND_USERNAME = cookie.slice(0, sep)
     env.FM_BITCOIND_PASSWORD = cookie.slice(sep + 1)
   }

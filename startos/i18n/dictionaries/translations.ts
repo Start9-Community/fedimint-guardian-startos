@@ -21,6 +21,7 @@ export default {
     17: 'Fedimint necesita saber qué backend de Bitcoin utilizar',
     18: 'Falta la cookie de bitcoind',
     19: 'La cookie de bitcoind está malformada',
+    20: 'Bitcoin aún no es accesible en la red interna',
   },
   de_DE: {
     0: 'Fedimint wird gestartet!',
@@ -42,6 +43,7 @@ export default {
     17: 'Fedimint muss wissen, welches Bitcoin-Backend verwendet werden soll',
     18: 'Bitcoind-Cookie fehlt',
     19: 'Bitcoind-Cookie ist fehlerhaft',
+    20: 'Bitcoin ist im internen Netzwerk noch nicht erreichbar',
   },
   pl_PL: {
     0: 'Uruchamianie Fedimint!',
@@ -63,6 +65,7 @@ export default {
     17: 'Fedimint musi wiedzieć, którego backendu Bitcoin użyć',
     18: 'Brak pliku cookie bitcoind',
     19: 'Plik cookie bitcoind jest uszkodzony',
+    20: 'Bitcoin nie jest jeszcze osiągalny w sieci wewnętrznej',
   },
   fr_FR: {
     0: 'Démarrage de Fedimint !',
@@ -84,5 +87,6 @@ export default {
     17: 'Fedimint doit savoir quel backend Bitcoin utiliser',
     18: 'Le cookie bitcoind est manquant',
     19: 'Le cookie bitcoind est mal formé',
+    20: 'Bitcoin n’est pas encore accessible sur le réseau interne',
   },
 } satisfies Record<string, LangDict>

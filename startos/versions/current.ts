@@ -1,16 +1,13 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
-export const v_0_11_1_1 = VersionInfo.of({
-  version: '0.11.1:1',
+export const current = VersionInfo.of({
+  version: '0.11.1:2',
   releaseNotes: {
-    en_US: `**Bumps**
-
-- Fedimint Guardian → 0.11.1 (gateway recovery + mnemonic management, Pkarr-based guardian discovery, modernized setup/dashboard UI, lower memory usage, expanded Prometheus metrics)
-- start-sdk → 1.5.2
-
-**Notes**
-
-- Existing federations: fedimintd performs the redb v2 → v3 database migration in place on first launch; no guardian action required. Federation config and consensus state are preserved.`,
+    en_US: 'Internal updates (start-sdk 2.0.x)',
+    es_ES: 'Actualizaciones internas (start-sdk 2.0.x)',
+    de_DE: 'Interne Aktualisierungen (start-sdk 2.0.x)',
+    pl_PL: 'Aktualizacje wewnętrzne (start-sdk 2.0.x)',
+    fr_FR: 'Mises à jour internes (start-sdk 2.0.x)',
   },
   migrations: {
     // No StartOS-side migration required for 0.10 → 0.11:

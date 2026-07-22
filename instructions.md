@@ -7,7 +7,7 @@ A Fedimint federation is set up by a small group of guardians (typically 3, 5, o
 ## What you get on StartOS
 
 - A **Guardian Interface** web UI that walks you through federation setup on first launch and becomes your Guardian Dashboard once the federation is running.
-- A choice of Bitcoin backend: a locally installed **Bitcoin Core** (recommended), or a remote **Esplora** API. The backend is set before the service starts.
+- A choice of Bitcoin backend: a locally installed **Bitcoin** node (recommended), or a remote **Esplora** API. The backend is set before the service starts.
 - A `fedimintd` daemon that participates in your federation's consensus once setup is complete.
 
 ## Getting set up
@@ -15,7 +15,7 @@ A Fedimint federation is set up by a small group of guardians (typically 3, 5, o
 Before the service can start, you must tell it where to get Bitcoin data. After install, StartOS posts a critical task **Bitcoin Configuration**:
 
 1. Run the **Bitcoin Configuration** task. Pick either:
-   - **Local node (recommended)** — uses the Bitcoin Core dependency. Install Bitcoin Core first if you haven't; the guardian will read its cookie automatically.
+   - **Local node (recommended)** — uses the Bitcoin dependency. Install Bitcoin first if you haven't; the guardian will read its cookie automatically.
    - **Esplora** — point at an Esplora API (defaults to `https://mempool.space/api`).
 2. Start the service and open the **Guardian Interface**.
 3. Coordinate with your fellow guardians out of band. One of you will act as the **leader** and the others as **followers**:
@@ -34,4 +34,4 @@ After setup, the Guardian Interface is your dashboard for federation operations:
 
 ### Actions
 
-- **Bitcoin Configuration** — switch between a local Bitcoin Core node and a remote Esplora API at any time. Re-run this if you initially picked Esplora and later install Bitcoin Core (or vice versa).
+- **Bitcoin Configuration** — switch between a local Bitcoin node and a remote Esplora API at any time. Re-run this if you initially picked Esplora and later install Bitcoin (or vice versa).
