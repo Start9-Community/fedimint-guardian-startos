@@ -84,10 +84,15 @@ export const main = sdk.setupMain(async ({ effects }) => {
         i18n('Bitcoin is not yet reachable on the internal network'),
       )
     }
-    // Re-read (and restart) when bitcoind rotates the cookie
+    // Re-read (and restart) only when bitcoind writes a replacement cookie —
+    // an absent cookie means bitcoind is down, and restarting then throws
+    // below rather than picking up credentials that do not exist yet.
     const rootfs = await fedimintdSubc.rootfs
     const cookieRaw = await FileHelper.string(`${rootfs}/mnt/bitcoin/.cookie`)
-      .read()
+      .read(
+        (cookie) => cookie,
+        (prev, next) => next === null || prev === next,
+      )
       .const(effects)
     if (!cookieRaw) {
       throw new Error(i18n('Bitcoind cookie is missing'))
