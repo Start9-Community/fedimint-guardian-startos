@@ -1,23 +1,33 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.11.1:5',
+  version: '0.11.1:6',
   releaseNotes: {
-    en_US: `Resolves the addresses of connected services more reliably.
+    en_US: `Fixes "Bitcoind cookie is missing" every time Bitcoin Core restarts.
 
-Fedimint Guardian looked up where to reach its dependencies through a field that only applies to one of the two ways a service can publish a port. It now reads the address itself, so a dependency changing how it serves TLS can no longer leave Fedimint Guardian unable to find it. Nothing changes in normal operation.`,
-    es_ES: `Resuelve de forma más fiable las direcciones de los servicios conectados.
+Fedimint Guardian reloads when Bitcoin Core issues new RPC credentials, which it does on every restart. That reload was previously triggered as soon as Bitcoin Core *began* shutting down, at which point the credentials had already been removed — so the Guardian restarted, found no credentials, and failed with "Bitcoind cookie is missing". It now reloads only once Bitcoin Core is back up and has published new credentials.
 
-Fedimint Guardian localizaba sus dependencias mediante un campo que solo se aplica a una de las dos formas en que un servicio puede publicar un puerto. Ahora lee la dirección en sí, de modo que si una dependencia cambia su forma de servir TLS, Fedimint Guardian seguirá encontrándola. En funcionamiento normal no cambia nada.`,
-    de_DE: `Ermittelt die Adressen verbundener Dienste zuverlässiger.
+This only affects guardians using a local Bitcoin Core backend; Esplora setups were never impacted.`,
+    es_ES: `Corrige el error «Falta la cookie de Bitcoind» cada vez que Bitcoin Core se reinicia.
 
-Fedimint Guardian suchte seine Abhängigkeiten über ein Feld, das nur für eine der beiden Arten gilt, auf die ein Dienst einen Port veröffentlichen kann. Jetzt wird die Adresse selbst gelesen, sodass eine Abhängigkeit, die ihre TLS-Bereitstellung ändert, für Fedimint Guardian auffindbar bleibt. Im normalen Betrieb ändert sich nichts.`,
-    pl_PL: `Pewniej ustala adresy połączonych usług.
+Fedimint Guardian se recarga cuando Bitcoin Core emite nuevas credenciales RPC, algo que hace en cada reinicio. Esa recarga se activaba en cuanto Bitcoin Core *empezaba* a apagarse, momento en el que las credenciales ya se habían eliminado — así que el Guardian se reiniciaba, no encontraba credenciales y fallaba con «Falta la cookie de Bitcoind». Ahora se recarga solo cuando Bitcoin Core ha vuelto y ha publicado nuevas credenciales.
 
-Fedimint Guardian wyszukiwał swoje zależności przez pole, które dotyczy tylko jednego z dwóch sposobów publikowania portu przez usługę. Teraz odczytuje sam adres, więc zależność zmieniająca sposób udostępniania TLS nadal pozostanie odnajdywalna dla Fedimint Guardian. W normalnej pracy nic się nie zmienia.`,
-    fr_FR: `Détermine plus fiablement les adresses des services connectés.
+Esto solo afecta a los guardianes que usan un backend local de Bitcoin Core; las configuraciones con Esplora nunca se vieron afectadas.`,
+    de_DE: `Behebt „Bitcoind-Cookie fehlt“ bei jedem Neustart von Bitcoin Core.
 
-Fedimint Guardian localisait ses dépendances via un champ qui ne s'applique qu'à l'un des deux modes de publication d'un port par un service. Il lit désormais l'adresse elle-même : une dépendance qui change sa façon de servir TLS reste donc trouvable par Fedimint Guardian. Rien ne change en fonctionnement normal.`,
+Fedimint Guardian lädt neu, sobald Bitcoin Core neue RPC-Zugangsdaten ausgibt — was bei jedem Neustart geschieht. Dieses Neuladen wurde bisher ausgelöst, sobald Bitcoin Core mit dem Herunterfahren *begann*; zu diesem Zeitpunkt waren die Zugangsdaten bereits entfernt. Der Guardian startete also neu, fand keine Zugangsdaten und scheiterte mit „Bitcoind-Cookie fehlt“. Er lädt jetzt erst neu, wenn Bitcoin Core wieder läuft und neue Zugangsdaten veröffentlicht hat.
+
+Betroffen sind nur Guardians mit lokalem Bitcoin-Core-Backend; Esplora-Konfigurationen waren nie betroffen.`,
+    pl_PL: `Naprawia błąd „Brak cookie Bitcoind” przy każdym restarcie Bitcoin Core.
+
+Fedimint Guardian przeładowuje się, gdy Bitcoin Core wydaje nowe dane uwierzytelniające RPC, co robi przy każdym restarcie. Dotąd to przeładowanie uruchamiało się, gdy tylko Bitcoin Core *zaczynał* się wyłączać — a dane uwierzytelniające były już wtedy usunięte. Guardian restartował się więc, nie znajdował danych i kończył błędem „Brak cookie Bitcoind”. Teraz przeładowuje się dopiero wtedy, gdy Bitcoin Core wróci i opublikuje nowe dane uwierzytelniające.
+
+Dotyczy to wyłącznie guardianów korzystających z lokalnego backendu Bitcoin Core; konfiguracje z Esplorą nigdy nie były dotknięte tym problemem.`,
+    fr_FR: `Corrige l'erreur « Cookie Bitcoind manquant » à chaque redémarrage de Bitcoin Core.
+
+Fedimint Guardian se recharge lorsque Bitcoin Core émet de nouveaux identifiants RPC, ce qu'il fait à chaque redémarrage. Ce rechargement était jusqu'ici déclenché dès que Bitcoin Core *commençait* à s'arrêter, moment où les identifiants avaient déjà été supprimés — le Guardian redémarrait donc, ne trouvait aucun identifiant et échouait avec « Cookie Bitcoind manquant ». Il ne se recharge désormais qu'une fois Bitcoin Core revenu et de nouveaux identifiants publiés.
+
+Seuls les guardians utilisant un backend Bitcoin Core local sont concernés ; les configurations Esplora n'ont jamais été affectées.`,
   },
   migrations: {
     // No StartOS-side migration required for 0.10 → 0.11:
