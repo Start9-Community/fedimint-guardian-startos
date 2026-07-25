@@ -4,7 +4,7 @@ import { rpcHostId, rpcPort } from 'bitcoin-core-startos/startos/utils'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
 import { storeJson } from './fileModels/store'
-import { bridgeAddress, uiPort } from './utils'
+import { uiPort } from './utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   console.info(i18n('Starting Fedimint!'))
@@ -71,11 +71,14 @@ export const main = sdk.setupMain(async ({ effects }) => {
     // install/uninstall/port-change and never restarts on bitcoind updates.
     // null => bitcoind not yet on the internal network (the cookie read below
     // would fail anyway); .const() re-fires and heals once it appears.
-    const bitcoindAddr = await bridgeAddress(effects, {
-      packageId: 'bitcoind',
-      hostId: rpcHostId,
-      internalPort: rpcPort,
-    }).const()
+    const bitcoindAddr = await sdk.host
+      .getBridgeAddress(effects, {
+        packageId: 'bitcoind',
+        hostId: rpcHostId,
+        internalPort: rpcPort,
+        ssl: false,
+      })
+      .const()
     if (!bitcoindAddr) {
       throw new Error(
         i18n('Bitcoin is not yet reachable on the internal network'),
