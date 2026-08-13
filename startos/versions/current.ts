@@ -1,42 +1,30 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.11.1:6',
+  version: '0.11.2:0',
   releaseNotes: {
-    en_US: `Fixes "Bitcoind cookie is missing" every time Bitcoin restarts.
+    en_US: `Security release. Upgrading is recommended for every guardian.
 
-Fedimint Guardian reloads when Bitcoin issues new RPC credentials, which it does on every restart. That reload was previously triggered as soon as Bitcoin *began* shutting down, at which point the credentials had already been removed — so the Guardian restarted, found no credentials, and failed with "Bitcoind cookie is missing". It now reloads only once Bitcoin is back up and has published new credentials.
+Fedimint 0.11.2 hardens the guardian against malformed or hostile requests from peers, clients, and Lightning gateways. API paths that could previously be made to panic — taking the guardian offline — now return errors instead, Lightning contracts are bound to the offer they were issued for and can only be funded once, and the on-chain wallet rejects peg-ins and peg-out fee rates it cannot safely process.`,
+    es_ES: `Versión de seguridad. Se recomienda actualizar a todos los guardianes.
 
-This only affects guardians using a local Bitcoin backend; Esplora setups were never impacted.`,
-    es_ES: `Corrige el error «Falta la cookie de Bitcoind» cada vez que Bitcoin se reinicia.
+Fedimint 0.11.2 refuerza al guardian frente a peticiones malformadas u hostiles procedentes de pares, clientes y pasarelas Lightning. Las rutas de la API que antes podían provocar un pánico — dejando al guardian fuera de línea — ahora devuelven errores en su lugar, los contratos Lightning quedan vinculados a la oferta para la que se emitieron y solo pueden financiarse una vez, y el monedero on-chain rechaza los peg-ins y las tarifas de peg-out que no puede procesar de forma segura.`,
+    de_DE: `Sicherheitsrelease. Ein Upgrade wird jedem Guardian empfohlen.
 
-Fedimint Guardian se recarga cuando Bitcoin emite nuevas credenciales RPC, algo que hace en cada reinicio. Esa recarga se activaba en cuanto Bitcoin *empezaba* a apagarse, momento en el que las credenciales ya se habían eliminado — así que el Guardian se reiniciaba, no encontraba credenciales y fallaba con «Falta la cookie de Bitcoind». Ahora se recarga solo cuando Bitcoin ha vuelto y ha publicado nuevas credenciales.
+Fedimint 0.11.2 härtet den Guardian gegen fehlerhafte oder bösartige Anfragen von Peers, Clients und Lightning-Gateways ab. API-Pfade, die sich bisher zu einem Panic bringen ließen — wodurch der Guardian offline ging — geben nun stattdessen Fehler zurück, Lightning-Verträge sind an das Angebot gebunden, für das sie ausgestellt wurden, und können nur einmal finanziert werden, und die On-Chain-Wallet weist Peg-ins und Peg-out-Gebührensätze zurück, die sie nicht sicher verarbeiten kann.`,
+    pl_PL: `Wydanie bezpieczeństwa. Aktualizacja jest zalecana każdemu guardianowi.
 
-Esto solo afecta a los guardianes que usan un backend local de Bitcoin; las configuraciones con Esplora nunca se vieron afectadas.`,
-    de_DE: `Behebt „Bitcoind-Cookie fehlt“ bei jedem Neustart von Bitcoin.
+Fedimint 0.11.2 wzmacnia guardiana przed nieprawidłowymi lub wrogimi żądaniami od innych węzłów, klientów i bramek Lightning. Ścieżki API, które wcześniej można było doprowadzić do paniki — wyłączając guardiana — zwracają teraz błędy, kontrakty Lightning są powiązane z ofertą, dla której zostały wystawione, i mogą zostać sfinansowane tylko raz, a portfel on-chain odrzuca peg-iny oraz stawki opłat peg-out, których nie jest w stanie bezpiecznie przetworzyć.`,
+    fr_FR: `Version de sécurité. La mise à niveau est recommandée à tous les guardians.
 
-Fedimint Guardian lädt neu, sobald Bitcoin neue RPC-Zugangsdaten ausgibt — was bei jedem Neustart geschieht. Dieses Neuladen wurde bisher ausgelöst, sobald Bitcoin mit dem Herunterfahren *begann*; zu diesem Zeitpunkt waren die Zugangsdaten bereits entfernt. Der Guardian startete also neu, fand keine Zugangsdaten und scheiterte mit „Bitcoind-Cookie fehlt“. Er lädt jetzt erst neu, wenn Bitcoin wieder läuft und neue Zugangsdaten veröffentlicht hat.
-
-Betroffen sind nur Guardians mit lokalem Bitcoin-Backend; Esplora-Konfigurationen waren nie betroffen.`,
-    pl_PL: `Naprawia błąd „Brak cookie Bitcoind” przy każdym restarcie Bitcoin.
-
-Fedimint Guardian przeładowuje się, gdy Bitcoin wydaje nowe dane uwierzytelniające RPC, co robi przy każdym restarcie. Dotąd to przeładowanie uruchamiało się, gdy tylko Bitcoin *zaczynał* się wyłączać — a dane uwierzytelniające były już wtedy usunięte. Guardian restartował się więc, nie znajdował danych i kończył błędem „Brak cookie Bitcoind”. Teraz przeładowuje się dopiero wtedy, gdy Bitcoin wróci i opublikuje nowe dane uwierzytelniające.
-
-Dotyczy to wyłącznie guardianów korzystających z lokalnego backendu Bitcoin; konfiguracje z Esplorą nigdy nie były dotknięte tym problemem.`,
-    fr_FR: `Corrige l'erreur « Cookie Bitcoind manquant » à chaque redémarrage de Bitcoin.
-
-Fedimint Guardian se recharge lorsque Bitcoin émet de nouveaux identifiants RPC, ce qu'il fait à chaque redémarrage. Ce rechargement était jusqu'ici déclenché dès que Bitcoin *commençait* à s'arrêter, moment où les identifiants avaient déjà été supprimés — le Guardian redémarrait donc, ne trouvait aucun identifiant et échouait avec « Cookie Bitcoind manquant ». Il ne se recharge désormais qu'une fois Bitcoin revenu et de nouveaux identifiants publiés.
-
-Seuls les guardians utilisant un backend Bitcoin local sont concernés ; les configurations Esplora n'ont jamais été affectées.`,
+Fedimint 0.11.2 renforce le guardian face aux requêtes malformées ou hostiles provenant des pairs, des clients et des passerelles Lightning. Les routes de l'API qui pouvaient auparavant être amenées à paniquer — mettant le guardian hors ligne — renvoient désormais des erreurs, les contrats Lightning sont liés à l'offre pour laquelle ils ont été émis et ne peuvent être financés qu'une seule fois, et le portefeuille on-chain rejette les peg-ins et les taux de frais de peg-out qu'il ne peut pas traiter en toute sécurité.`,
   },
   migrations: {
-    // No StartOS-side migration required for 0.10 → 0.11:
-    // - The on-disk db schema bump (redb v2 → v3) is migrated automatically
-    //   by fedimintd on first launch.
+    // No StartOS-side migration required for 0.11.1 → 0.11.2:
+    // - 0.11.2 is a security patch set on the 0.11 line; there is no on-disk
+    //   db schema change, so fedimintd starts on the existing data directory
+    //   as-is.
     // - The package's own store.json schema (bitcoinBackend) is unchanged.
-    // - Breaking changes in the 0.11 release notes target the gateway,
-    //   gateway-cli, and downstream Rust API consumers — none of which this
-    //   guardian package depends on.
     up: async () => {},
     down: IMPOSSIBLE,
   },
