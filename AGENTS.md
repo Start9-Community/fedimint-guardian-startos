@@ -6,15 +6,10 @@ Develop it inside a StartOS packaging workspace created by `start-cli s9pk init-
 which provides the packaging guide and agent context one level up. If you're reading this in a
 bare clone with no workspace, the full guide is at <https://docs.start9.com/packaging>.
 
-Work this package's `TODO.md` from top to bottom. Keep `README.md` (architecture, for developers and LLMs) and `instructions.md` (end-user docs) in sync with your changes.
+Work this package's `TODO.md` from top to bottom. Keep `README.md` (technical reference for an AI support or administering agent) and `instructions.md` (end-user docs) in sync with your changes.
 
 ## This repo
 
-- **Package id is `fedimint-guardian`.** One subcontainer, `fedimintd-sub`, built from the local `Dockerfile` (image id `fedimintd`); it exposes a single `ui` interface (the Guardian Dashboard) on port 8175.
-- **Bitcoin backend is user-chosen and optional.** The "Bitcoin Configuration" action writes `store.json` (`fileModels/store.ts`) selecting either a local **bitcoind** dependency or an external **Esplora** URL; `dependencies.ts` only declares the bitcoind dependency when that backend is selected.
-- **Reaching bitcoind goes through the LXC bridge**, not `.startos` DNS. `main.ts` resolves bitcoind's RPC bridge address through `sdk.host.getBridgeAddress` — which resolves that binding’s own derived bridge address — chained with `.const()` so main heals automatically when bitcoind is installed or moves ports and never restarts on bitcoind updates. It imports bitcoind's `rpcHostId`/`rpcPort` from `bitcoin-core-startos/startos/utils` (a declared dependency) rather than hardcoding `http://bitcoind.startos:8332`. The cookie is still read from the `/mnt/bitcoin` dependency mount inside the subcontainer's rootfs and re-read reactively (`.const()`) so a rotated cookie triggers a restart. That watch passes an `eq` that treats an **absent** cookie as no change: bitcoind deletes `.cookie` on clean shutdown, and restarting on that would tear main down while bitcoind is unreachable — and throw on the `!cookieRaw` guard below. Only a replacement cookie restarts main.
-- **`store.ts` builds zod schemas directly (`import { z } from 'zod'`) and passes them to `FileHelper.json`.** The package's `node_modules/zod` must be the **same version the SDK bundles** (start-sdk 2.0 uses zod `4.4.3`); a mismatched zod makes `FileHelper.json` reject the schema (and can send tsc into an infinite type instantiation / OOM). This and `fedimint-gateway-startos` are the only packages that import zod directly.
-
-## Inspecting a running install
-
-To run a command inside the service's container (read its generated config, grep app logs), use `start-cli package attach fedimint-guardian -n fedimintd -- <cmd>`. Select the subcontainer by **name** with `-n` (the name passed to `SubContainer.of` in `main.ts` — here `fedimintd-sub`) or by image with `-i`. Note: `-s/--subcontainer` matches the internal **Guid**, not the name, so passing a name to `-s` fails with "no matching subcontainers".
+- **`ssl: false` on bitcoind's RPC lookup.** That binding publishes a plaintext _and_ a TLS bridge address; the host id comes from `bitcoin-core-startos/startos/utils` rather than a hardcoded hostname.
+- **Throwing on an unresolvable address or an unreadable cookie is deliberate.** A guardian that starts against a half-configured Bitcoin backend is worse than one that refuses and says which piece is missing.
+- **`backups.ts` and the migrations address volumes as `/media/startos/volumes/<name>`** — the container runtime's own mount of them, the same convention used across the fleet. That is a different vantage point from the host path you see over SSH (`/media/startos/data/package-data/volumes/…`); don't "correct" one into the other. Renaming a volume means editing these literals.
