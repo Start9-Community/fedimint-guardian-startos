@@ -1,29 +1,41 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.11.2:0',
+  version: '0.12.0:0',
   releaseNotes: {
-    en_US: `Security release. Upgrading is recommended for every guardian.
+    en_US: `Major release. Coordinate this upgrade with your fellow guardians.
 
-Fedimint 0.11.2 hardens the guardian against malformed or hostile requests from peers, clients, and Lightning gateways. API paths that could previously be made to panic — taking the guardian offline — now return errors instead, Lightning contracts are bound to the offer they were issued for and can only be funded once, and the on-chain wallet rejects peg-ins and peg-out fee rates it cannot safely process.`,
-    es_ES: `Versión de seguridad. Se recomienda actualizar a todos los guardianes.
+The P2P networking stack was upgraded to Iroh 1.0, which cannot connect to guardians running earlier releases. In a federation of 3f+1 guardians, up to f guardians can upgrade early on their own, then at least f+1 guardians have to upgrade together in a coordinated window (consensus pauses until enough have switched), after which the remaining f can follow at their own pace.
 
-Fedimint 0.11.2 refuerza al guardian frente a peticiones malformadas u hostiles procedentes de pares, clientes y pasarelas Lightning. Las rutas de la API que antes podían provocar un pánico — dejando al guardian fuera de línea — ahora devuelven errores en su lugar, los contratos Lightning quedan vinculados a la oferta para la que se emitieron y solo pueden financiarse una vez, y el monedero on-chain rechaza los peg-ins y las tarifas de peg-out que no puede procesar de forma segura.`,
-    de_DE: `Sicherheitsrelease. Ein Upgrade wird jedem Guardian empfohlen.
+Fedimint 0.12.0 also brings much faster Lightning payments, lets wallet users recover without downtime, and includes the security hardening already shipped in 0.11.2. Newly created federations now default to the next-generation module set; existing federations keep their configured modules and are unaffected.`,
+    es_ES: `Versión mayor. Coordina esta actualización con los demás guardianes.
 
-Fedimint 0.11.2 härtet den Guardian gegen fehlerhafte oder bösartige Anfragen von Peers, Clients und Lightning-Gateways ab. API-Pfade, die sich bisher zu einem Panic bringen ließen — wodurch der Guardian offline ging — geben nun stattdessen Fehler zurück, Lightning-Verträge sind an das Angebot gebunden, für das sie ausgestellt wurden, und können nur einmal finanziert werden, und die On-Chain-Wallet weist Peg-ins und Peg-out-Gebührensätze zurück, die sie nicht sicher verarbeiten kann.`,
-    pl_PL: `Wydanie bezpieczeństwa. Aktualizacja jest zalecana każdemu guardianowi.
+La pila de red P2P se ha actualizado a Iroh 1.0, que no puede conectarse con guardianes que ejecutan versiones anteriores. En una federación de 3f+1 guardianes, hasta f guardianes pueden actualizar antes por su cuenta, luego al menos f+1 guardianes tienen que actualizar juntos en una ventana coordinada (el consenso se pausa hasta que suficientes hayan cambiado), y después los f restantes pueden seguir a su propio ritmo.
 
-Fedimint 0.11.2 wzmacnia guardiana przed nieprawidłowymi lub wrogimi żądaniami od innych węzłów, klientów i bramek Lightning. Ścieżki API, które wcześniej można było doprowadzić do paniki — wyłączając guardiana — zwracają teraz błędy, kontrakty Lightning są powiązane z ofertą, dla której zostały wystawione, i mogą zostać sfinansowane tylko raz, a portfel on-chain odrzuca peg-iny oraz stawki opłat peg-out, których nie jest w stanie bezpiecznie przetworzyć.`,
-    fr_FR: `Version de sécurité. La mise à niveau est recommandée à tous les guardians.
+Fedimint 0.12.0 también trae pagos Lightning mucho más rápidos, permite a los usuarios recuperar su monedero sin interrupciones e incluye el refuerzo de seguridad ya distribuido en 0.11.2. Las federaciones recién creadas usan ahora por defecto el conjunto de módulos de nueva generación; las federaciones existentes conservan sus módulos configurados y no se ven afectadas.`,
+    de_DE: `Major-Release. Koordiniere dieses Upgrade mit den anderen Guardians.
 
-Fedimint 0.11.2 renforce le guardian face aux requêtes malformées ou hostiles provenant des pairs, des clients et des passerelles Lightning. Les routes de l'API qui pouvaient auparavant être amenées à paniquer — mettant le guardian hors ligne — renvoient désormais des erreurs, les contrats Lightning sont liés à l'offre pour laquelle ils ont été émis et ne peuvent être financés qu'une seule fois, et le portefeuille on-chain rejette les peg-ins et les taux de frais de peg-out qu'il ne peut pas traiter en toute sécurité.`,
+Der P2P-Netzwerkstack wurde auf Iroh 1.0 aktualisiert, das sich nicht mit Guardians auf früheren Versionen verbinden kann. In einer Föderation aus 3f+1 Guardians können bis zu f Guardians vorab einzeln aktualisieren, dann müssen mindestens f+1 Guardians gemeinsam in einem koordinierten Zeitfenster aktualisieren (der Konsens pausiert, bis genügend umgestiegen sind), danach können die übrigen f in eigenem Tempo folgen.
+
+Fedimint 0.12.0 bringt außerdem deutlich schnellere Lightning-Zahlungen, lässt Wallet-Nutzer ohne Ausfallzeit wiederherstellen und enthält die bereits mit 0.11.2 ausgelieferte Sicherheitshärtung. Neu erstellte Föderationen verwenden jetzt standardmäßig den Modulsatz der nächsten Generation; bestehende Föderationen behalten ihre konfigurierten Module und sind nicht betroffen.`,
+    pl_PL: `Wydanie główne. Skoordynuj tę aktualizację z pozostałymi guardianami.
+
+Stos sieciowy P2P został zaktualizowany do Iroh 1.0, który nie może łączyć się z guardianami działającymi na wcześniejszych wersjach. W federacji 3f+1 guardianów maksymalnie f guardianów może zaktualizować się wcześniej samodzielnie, następnie co najmniej f+1 guardianów musi zaktualizować się razem w skoordynowanym oknie (konsensus zatrzymuje się, aż wystarczająca liczba przejdzie na nową wersję), po czym pozostałych f może dołączyć we własnym tempie.
+
+Fedimint 0.12.0 przynosi też znacznie szybsze płatności Lightning, pozwala użytkownikom portfeli odzyskiwać środki bez przestoju i zawiera wzmocnienia bezpieczeństwa dostarczone już w 0.11.2. Nowo tworzone federacje domyślnie używają teraz zestawu modułów nowej generacji; istniejące federacje zachowują skonfigurowane moduły i nie są objęte zmianą.`,
+    fr_FR: `Version majeure. Coordonnez cette mise à niveau avec les autres guardians.
+
+La pile réseau P2P a été mise à niveau vers Iroh 1.0, qui ne peut pas se connecter aux guardians exécutant des versions antérieures. Dans une fédération de 3f+1 guardians, jusqu'à f guardians peuvent se mettre à niveau en avance individuellement, puis au moins f+1 guardians doivent se mettre à niveau ensemble dans une fenêtre coordonnée (le consensus est en pause jusqu'à ce qu'un nombre suffisant ait basculé), après quoi les f restants peuvent suivre à leur rythme.
+
+Fedimint 0.12.0 apporte aussi des paiements Lightning nettement plus rapides, permet aux utilisateurs de récupérer leur portefeuille sans interruption et inclut le renforcement de sécurité déjà livré avec la 0.11.2. Les fédérations nouvellement créées utilisent désormais par défaut le jeu de modules de nouvelle génération ; les fédérations existantes conservent leurs modules configurés et ne sont pas concernées.`,
   },
   migrations: {
-    // No StartOS-side migration required for 0.11.1 → 0.11.2:
-    // - 0.11.2 is a security patch set on the 0.11 line; there is no on-disk
-    //   db schema change, so fedimintd starts on the existing data directory
-    //   as-is.
+    // No StartOS-side migration required for 0.11.2 → 0.12.0:
+    // - fedimintd migrates its own database on startup; there is no
+    //   StartOS-level data layout change.
+    // - Guardian configs are no longer encrypted at rest as of 0.12.0, but
+    //   fedimintd reads legacy encrypted configs transparently, so nothing
+    //   needs to happen here.
     // - The package's own store.json schema (bitcoinBackend) is unchanged.
     up: async () => {},
     down: IMPOSSIBLE,
