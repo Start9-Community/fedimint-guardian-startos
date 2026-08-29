@@ -10,6 +10,12 @@ const dict = {
   'Bitcoind cookie is missing': 18,
   'Bitcoind cookie is malformed': 19,
   'Bitcoin is not yet reachable on the internal network': 20,
+  'Guardian password has not been generated yet': 21,
+
+  // actions/guardianPassword.ts
+  'Guardian Password': 22,
+  'Reveal the password used to sign in to the Guardian Dashboard': 23,
+  'Use this password to sign in to the Guardian Dashboard': 24,
 
   // interfaces.ts
   'Guardian Interface': 4,

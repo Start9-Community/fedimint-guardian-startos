@@ -22,6 +22,10 @@ export default {
     18: 'Falta la cookie de bitcoind',
     19: 'La cookie de bitcoind está malformada',
     20: 'Bitcoin aún no es accesible en la red interna',
+    21: 'La contraseña del guardián aún no se ha generado',
+    22: 'Contraseña del Guardián',
+    23: 'Muestra la contraseña utilizada para iniciar sesión en el Panel del Guardián',
+    24: 'Utiliza esta contraseña para iniciar sesión en el Panel del Guardián',
   },
   de_DE: {
     0: 'Fedimint wird gestartet!',
@@ -44,6 +48,10 @@ export default {
     18: 'Bitcoind-Cookie fehlt',
     19: 'Bitcoind-Cookie ist fehlerhaft',
     20: 'Bitcoin ist im internen Netzwerk noch nicht erreichbar',
+    21: 'Das Guardian-Passwort wurde noch nicht generiert',
+    22: 'Guardian-Passwort',
+    23: 'Zeigt das Passwort für die Anmeldung am Guardian-Dashboard an',
+    24: 'Verwende dieses Passwort, um dich am Guardian-Dashboard anzumelden',
   },
   pl_PL: {
     0: 'Uruchamianie Fedimint!',
@@ -66,6 +74,10 @@ export default {
     18: 'Brak pliku cookie bitcoind',
     19: 'Plik cookie bitcoind jest uszkodzony',
     20: 'Bitcoin nie jest jeszcze osiągalny w sieci wewnętrznej',
+    21: 'Hasło strażnika nie zostało jeszcze wygenerowane',
+    22: 'Hasło Strażnika',
+    23: 'Pokaż hasło używane do logowania w Panelu Strażnika',
+    24: 'Użyj tego hasła, aby zalogować się do Panelu Strażnika',
   },
   fr_FR: {
     0: 'Démarrage de Fedimint !',
@@ -88,5 +100,9 @@ export default {
     18: 'Le cookie bitcoind est manquant',
     19: 'Le cookie bitcoind est mal formé',
     20: 'Bitcoin n’est pas encore accessible sur le réseau interne',
+    21: 'Le mot de passe du guardian n’a pas encore été généré',
+    22: 'Mot de passe du Guardian',
+    23: 'Affiche le mot de passe utilisé pour se connecter au tableau de bord Guardian',
+    24: 'Utilisez ce mot de passe pour vous connecter au tableau de bord Guardian',
   },
 } satisfies Record<string, LangDict>

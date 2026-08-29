@@ -1,42 +1,21 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.12.0:0',
+  version: '0.12.0:1',
   releaseNotes: {
-    en_US: `Major release. Coordinate this upgrade with your fellow guardians.
-
-The P2P networking stack was upgraded to Iroh 1.0, which cannot connect to guardians running earlier releases. In a federation of 3f+1 guardians, up to f guardians can upgrade early on their own, then at least f+1 guardians have to upgrade together in a coordinated window (consensus pauses until enough have switched), after which the remaining f can follow at their own pace.
-
-Fedimint 0.12.0 also brings much faster Lightning payments, lets wallet users recover without downtime, and includes the security hardening already shipped in 0.11.2. Newly created federations now default to the next-generation module set; existing federations keep their configured modules and are unaffected.`,
-    es_ES: `Versión mayor. Coordina esta actualización con los demás guardianes.
-
-La pila de red P2P se ha actualizado a Iroh 1.0, que no puede conectarse con guardianes que ejecutan versiones anteriores. En una federación de 3f+1 guardianes, hasta f guardianes pueden actualizar antes por su cuenta, luego al menos f+1 guardianes tienen que actualizar juntos en una ventana coordinada (el consenso se pausa hasta que suficientes hayan cambiado), y después los f restantes pueden seguir a su propio ritmo.
-
-Fedimint 0.12.0 también trae pagos Lightning mucho más rápidos, permite a los usuarios recuperar su monedero sin interrupciones e incluye el refuerzo de seguridad ya distribuido en 0.11.2. Las federaciones recién creadas usan ahora por defecto el conjunto de módulos de nueva generación; las federaciones existentes conservan sus módulos configurados y no se ven afectadas.`,
-    de_DE: `Major-Release. Koordiniere dieses Upgrade mit den anderen Guardians.
-
-Der P2P-Netzwerkstack wurde auf Iroh 1.0 aktualisiert, das sich nicht mit Guardians auf früheren Versionen verbinden kann. In einer Föderation aus 3f+1 Guardians können bis zu f Guardians vorab einzeln aktualisieren, dann müssen mindestens f+1 Guardians gemeinsam in einem koordinierten Zeitfenster aktualisieren (der Konsens pausiert, bis genügend umgestiegen sind), danach können die übrigen f in eigenem Tempo folgen.
-
-Fedimint 0.12.0 bringt außerdem deutlich schnellere Lightning-Zahlungen, lässt Wallet-Nutzer ohne Ausfallzeit wiederherstellen und enthält die bereits mit 0.11.2 ausgelieferte Sicherheitshärtung. Neu erstellte Föderationen verwenden jetzt standardmäßig den Modulsatz der nächsten Generation; bestehende Föderationen behalten ihre konfigurierten Module und sind nicht betroffen.`,
-    pl_PL: `Wydanie główne. Skoordynuj tę aktualizację z pozostałymi guardianami.
-
-Stos sieciowy P2P został zaktualizowany do Iroh 1.0, który nie może łączyć się z guardianami działającymi na wcześniejszych wersjach. W federacji 3f+1 guardianów maksymalnie f guardianów może zaktualizować się wcześniej samodzielnie, następnie co najmniej f+1 guardianów musi zaktualizować się razem w skoordynowanym oknie (konsensus zatrzymuje się, aż wystarczająca liczba przejdzie na nową wersję), po czym pozostałych f może dołączyć we własnym tempie.
-
-Fedimint 0.12.0 przynosi też znacznie szybsze płatności Lightning, pozwala użytkownikom portfeli odzyskiwać środki bez przestoju i zawiera wzmocnienia bezpieczeństwa dostarczone już w 0.11.2. Nowo tworzone federacje domyślnie używają teraz zestawu modułów nowej generacji; istniejące federacje zachowują skonfigurowane moduły i nie są objęte zmianą.`,
-    fr_FR: `Version majeure. Coordonnez cette mise à niveau avec les autres guardians.
-
-La pile réseau P2P a été mise à niveau vers Iroh 1.0, qui ne peut pas se connecter aux guardians exécutant des versions antérieures. Dans une fédération de 3f+1 guardians, jusqu'à f guardians peuvent se mettre à niveau en avance individuellement, puis au moins f+1 guardians doivent se mettre à niveau ensemble dans une fenêtre coordonnée (le consensus est en pause jusqu'à ce qu'un nombre suffisant ait basculé), après quoi les f restants peuvent suivre à leur rythme.
-
-Fedimint 0.12.0 apporte aussi des paiements Lightning nettement plus rapides, permet aux utilisateurs de récupérer leur portefeuille sans interruption et inclut le renforcement de sécurité déjà livré avec la 0.11.2. Les fédérations nouvellement créées utilisent désormais par défaut le jeu de modules de nouvelle génération ; les fédérations existantes conservent leurs modules configurés et ne sont pas concernées.`,
+    en_US: `The Guardian Dashboard and the admin API are now protected by a password. On fresh installs a strong password is generated automatically; guardians who upgraded from a pre-0.12 release keep their existing password. Reveal and copy it at any time via the new Guardian Password action.`,
+    es_ES: `El Panel del Guardián y la API de administración ahora están protegidos por una contraseña. En instalaciones nuevas se genera automáticamente una contraseña fuerte; los guardianes que actualizaron desde una versión anterior a 0.12 conservan su contraseña existente. Puedes mostrarla y copiarla en cualquier momento mediante la nueva acción Contraseña del Guardián.`,
+    de_DE: `Das Guardian-Dashboard und die Admin-API sind jetzt durch ein Passwort geschützt. Bei Neuinstallationen wird automatisch ein starkes Passwort generiert; Guardians, die von einer Version vor 0.12 aktualisiert haben, behalten ihr bestehendes Passwort. Über die neue Aktion Guardian-Passwort kannst du es jederzeit anzeigen und kopieren.`,
+    pl_PL: `Panel Strażnika i API administracyjne są teraz chronione hasłem. Przy nowych instalacjach silne hasło jest generowane automatycznie; strażnicy, którzy zaktualizowali z wersji starszej niż 0.12, zachowują swoje dotychczasowe hasło. Możesz je w każdej chwili wyświetlić i skopiować za pomocą nowej akcji Hasło Strażnika.`,
+    fr_FR: `Le tableau de bord Guardian et l'API d'administration sont désormais protégés par un mot de passe. Lors des nouvelles installations, un mot de passe fort est généré automatiquement ; les guardians ayant mis à niveau depuis une version antérieure à 0.12 conservent leur mot de passe existant. Vous pouvez l'afficher et le copier à tout moment via la nouvelle action Mot de passe du Guardian.`,
   },
   migrations: {
-    // No StartOS-side migration required for 0.11.2 → 0.12.0:
-    // - fedimintd migrates its own database on startup; there is no
-    //   StartOS-level data layout change.
-    // - Guardian configs are no longer encrypted at rest as of 0.12.0, but
-    //   fedimintd reads legacy encrypted configs transparently, so nothing
-    //   needs to happen here.
-    // - The package's own store.json schema (bitcoinBackend) is unchanged.
+    // Deliberately a no-op: the guardian password is seeded in init
+    // (startos/init/seedFiles.ts), not here. VersionGraph migrations only run
+    // on the update path between existing data versions, so a migration would
+    // never cover fresh installs; setupOnInit runs on every init (install,
+    // update, restore, startup) and is idempotent, which also lets it pick up
+    // a legacy password.private from pre-0.12 installs.
     up: async () => {},
     down: IMPOSSIBLE,
   },

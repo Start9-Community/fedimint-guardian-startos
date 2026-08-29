@@ -18,8 +18,15 @@ const bitcoinBackend = z
   .discriminatedUnion('type', [bitcoindVariant, esploraVariant])
   .optional()
 
+// Intentionally no `.catch` default: the password is seeded exactly once in
+// init (carried over from a pre-0.12 `password.private` if present, otherwise
+// freshly generated) and must never be silently regenerated afterwards —
+// guardians rely on it staying stable.
+const guardianPassword = z.string().optional()
+
 const shape = z.object({
   bitcoinBackend,
+  guardianPassword,
 })
 
 export const storeJson = FileHelper.json(
