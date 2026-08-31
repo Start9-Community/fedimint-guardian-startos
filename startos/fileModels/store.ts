@@ -18,8 +18,11 @@ const bitcoinBackend = z
   .discriminatedUnion('type', [bitcoindVariant, esploraVariant])
   .optional()
 
+const guardianPassword = z.string().optional()
+
 const shape = z.object({
   bitcoinBackend,
+  guardianPassword,
 })
 
 export const storeJson = FileHelper.json(

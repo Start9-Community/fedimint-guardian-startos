@@ -17,12 +17,17 @@ export const main = sdk.setupMain(async ({ effects }) => {
       ),
     )
   }
-  const { bitcoinBackend } = store
+  if (!store.guardianPassword) {
+    throw new Error(i18n('Guardian password has not been set'))
+  }
+  const { bitcoinBackend, guardianPassword } = store
 
   const env: Record<string, string> = {
     FM_DATA_DIR: '/fedimintd',
     FM_BITCOIN_NETWORK: 'bitcoin',
     FM_BIND_UI: `0.0.0.0:${uiPort}`,
+    // Unset, fedimintd serves the dashboard with no login form at all.
+    FM_PASSWORD_UI: guardianPassword,
     FM_ENABLE_IROH: 'true',
     // Disable Arti's fs-mistrust permission checks. These invoke
     // getpwuid/getpwnam via libc, which reads /etc/passwd. The Dockerfile
