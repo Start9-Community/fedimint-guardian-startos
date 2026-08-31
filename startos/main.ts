@@ -17,12 +17,8 @@ export const main = sdk.setupMain(async ({ effects }) => {
       ),
     )
   }
-  // Seeded by init (seedFiles.ts) before main ever runs; if it is somehow
-  // missing, throw so main re-runs once init has fixed it. Reading via the
-  // same `.const(effects)` store read as above means a password change
-  // restarts the daemon with the new value.
   if (!store.guardianPassword) {
-    throw new Error(i18n('Guardian password has not been generated yet'))
+    throw new Error(i18n('Guardian password has not been set'))
   }
   const { bitcoinBackend, guardianPassword } = store
 
@@ -30,11 +26,8 @@ export const main = sdk.setupMain(async ({ effects }) => {
     FM_DATA_DIR: '/fedimintd',
     FM_BITCOIN_NETWORK: 'bitcoin',
     FM_BIND_UI: `0.0.0.0:${uiPort}`,
-    // Gates the guardian admin web UI (login form) and the admin RPCs on the
-    // public API respectively. Without these, fedimintd 0.12 serves the
-    // dashboard unauthenticated and admin RPCs always return 401.
+    // Unset, fedimintd serves the dashboard with no login form at all.
     FM_PASSWORD_UI: guardianPassword,
-    FM_PASSWORD_API: guardianPassword,
     FM_ENABLE_IROH: 'true',
     // Disable Arti's fs-mistrust permission checks. These invoke
     // getpwuid/getpwnam via libc, which reads /etc/passwd. The Dockerfile

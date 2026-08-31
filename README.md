@@ -65,17 +65,22 @@ The Bitcoin mount is added only when a local node is selected, so a guardian run
 
 ## File Models
 
-One model, holding one choice.
+One model, holding two fields.
 
-| File         | Format | Modelled                | Written by          |
-| ------------ | ------ | ----------------------- | ------------------- |
-| `store.json` | JSON   | Yes — `FileHelper.json` | Init and the action |
+| File         | Format | Modelled                | Written by                       |
+| ------------ | ------ | ----------------------- | -------------------------------- |
+| `store.json` | JSON   | Yes — `FileHelper.json` | Init, the migration, the actions |
 
-It records `bitcoinBackend`: a local Bitcoin node, or an Esplora URL.
+| Field              | Holds                                      |
+| ------------------ | ------------------------------------------ |
+| `bitcoinBackend`   | A local Bitcoin node, or an Esplora URL    |
+| `guardianPassword` | The password gating the Guardian Dashboard |
 
-**It deliberately has no default.** The declared dependency is derived from this field, so defaulting it would make Bitcoin appear as a dependency of a guardian the user has not configured yet — demanding they install a service they may not want. Undefined means "not chosen", and the package raises a task rather than guessing.
+**Neither has a default.** For the backend, the declared dependency is derived from the field, so defaulting it would make Bitcoin appear as a dependency of a guardian the user has not configured yet — demanding they install a service they may not want. For the password, a default would be a shared secret. Undefined means "not chosen" in both cases, and the package raises a task rather than guessing.
 
-It is read reactively, so changing the backend restarts the guardian against the new source.
+**The password is stored in plaintext because `fedimintd` takes it in plaintext.** It is passed as `FM_PASSWORD_UI`, which the daemon compares against the submitted password in constant time; there is no hash form it accepts, and it is needed on every start, so it cannot be shown once and discarded. It lives on the server's encrypted data partition and travels inside encrypted backups.
+
+Both are read reactively, so changing the backend restarts the guardian against the new source, and replacing the password restarts it with the new one.
 
 Everything the guardian itself persists — federation configuration, consensus state, its share of the custody — lives in its own database and is not modelled.
 
@@ -107,15 +112,15 @@ Bound on the `ui-multi` MultiHost over HTTP and not masked.
 
 ## Installation and First-Run Flow
 
-Install seeds the store and raises a critical task to choose the Bitcoin backend. The service cannot start until that is done, because there is no default that would be right for everyone — one choice needs a node you may not run, the other sends queries to a third party.
+Install seeds the store and raises two critical tasks: choose the Bitcoin backend, and set the guardian password. The service cannot start until both are done. There is no Bitcoin default that would be right for everyone — one choice needs a node you may not run, the other sends queries to a third party — and a guardian with no password serves its dashboard, including the config-backup download, to anyone who reaches the address.
 
-The task check is **reactive**: it is raised on any init that finds no backend, not only on install.
+Both checks are **reactive**: each is raised on any init that finds its field unset, not only on install. A guardian upgrading from a release before 0.12.0 has its password carried over from `password.private` by the migration, so the password task never appears for it.
 
 Once started, everything else happens in the guardian's own interface: this is where a federation is created or joined, and where the other guardians' details are exchanged. **That setup is a one-time, coordinated ceremony among the guardians** — the package has no part in it and cannot repeat it.
 
 ## Actions
 
-One action.
+Two actions.
 
 ### Bitcoin Configuration
 
@@ -126,13 +131,23 @@ Chooses a local Bitcoin node or a remote Esplora endpoint.
 - **Repeat safety:** idempotent; neither backend holds state, so switching is a genuine swap.
 - **What to weigh:** Esplora is a third party, and a guardian's queries reveal what the federation is doing. A local node keeps that on the box, at the cost of running one.
 
+### Set Guardian Password
+
+Generates the password gating the Guardian Dashboard and returns it once, masked and copyable.
+
+- **What it changes:** the password in the store, and therefore `FM_PASSWORD_UI` on the daemon.
+- **Cost:** a running guardian restarts to apply it, which pauses its participation in consensus for as long as the restart takes.
+- **Repeat safety:** safe, and it is the reset path — each run replaces the stored password. Nothing else derives from it, so a guardian cannot be locked out of its own configuration by rotating.
+- **What to weigh:** the value is shown once. A guardian that loses it runs the action again rather than recovering the old one.
+
 ## Tasks
 
-One.
+Two.
 
 | Task                  | Severity   | Raised when                        | Cleared when    |
 | --------------------- | ---------- | ---------------------------------- | --------------- |
 | Bitcoin Configuration | `critical` | No Bitcoin backend has been chosen | The action runs |
+| Set Guardian Password | `critical` | No password has been set           | The action runs |
 
 `critical` blocks the service from starting and suspends the ordinary controls, so a fresh install shows the task and nothing else.
 
@@ -146,7 +161,7 @@ One check, on the only daemon.
 
 It reports that the dashboard is serving. It says nothing about whether the federation has reached consensus, whether the other guardians are reachable, or whether setup was completed — all of which are visible in the dashboard.
 
-A service that will not start at all, with no failing check, is most likely the Bitcoin backend: an unresolvable address or an unreadable cookie, named in the error.
+A service that will not start at all, with no failing check, is most likely the Bitcoin backend: an unresolvable address or an unreadable cookie, named in the error. A service that will not start _and_ shows a critical task is waiting on that task, not failing.
 
 ## Backups and Restore
 
@@ -166,11 +181,13 @@ So a restored guardian resumes from its most recent checkpoint rather than from 
 
 1. **The live database is never backed up**, only checkpoints. A restore rewinds to the newest one.
 2. **A restore will not overwrite an existing database**, so restoring onto a live install is a no-op for the database.
-3. **A Bitcoin backend must be chosen before the service will start.** There is no default.
+3. **A Bitcoin backend must be chosen and a password set before the service will start.** Neither has a default.
 4. **Esplora is a third party**, and a guardian's queries to it are informative about the federation.
 5. **Mainnet only.** The network is fixed in the package.
 6. **Federation setup is not managed here.** Creating or joining one is a coordinated ceremony in the guardian's own interface.
 7. **No peer port is exported.** Guardian-to-guardian traffic uses the transport the daemon manages itself.
+8. **The dashboard password is stored in plaintext**, because `fedimintd` accepts no other form. Replacing it is the only recovery; it cannot be read back out of the daemon.
+9. **Guardian admin over the public API is left disabled.** `FM_PASSWORD_API` is not set, so the admin RPCs `fedimintd` serves on its network-reachable API return 401, as upstream defaults them to. The federation's ordinary client traffic is unaffected; the dashboard is the only administration surface.
 
 ---
 
@@ -188,11 +205,12 @@ volumes:
   main: package store only
   fedimintd: /fedimintd # database plus db_checkpoints
 file_models:
-  - store.json
+  - store.json # bitcoinBackend, guardianPassword
 startos_managed_env_vars:
   - FM_DATA_DIR
   - FM_BITCOIN_NETWORK
   - FM_BIND_UI
+  - FM_PASSWORD_UI # gates the dashboard; unset, fedimintd serves it with no login
   - FM_ENABLE_IROH
   - FM_BITCOIND_URL # local-node backend only
   - FM_BITCOIND_USERNAME # from bitcoind's cookie
@@ -204,8 +222,10 @@ interfaces:
   ui: { type: ui, port: 8175 }
 actions:
   - config-bitcoin
+  - set-guardian-password
 tasks:
   - { action: config-bitcoin, severity: critical } # reactive
+  - { action: set-guardian-password, severity: critical } # reactive
 health_checks:
   - fedimintd # displayed "Guardian Dashboard"
 ```
