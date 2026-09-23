@@ -9,7 +9,7 @@
 > upstream documentation is accurate and fully applicable — see the
 > Documentation section of `instructions.md` for links.
 
-A [Fedimint](https://github.com/fedimint/fedimint) guardian is one of the servers that jointly custody a federation's Bitcoin. This package runs one, lets you point it at your own Bitcoin node or a remote Esplora, and backs its database up in a way that is actually restorable.
+A [Fedimint](https://github.com/fedimint/fedimint) guardian is one of the servers that jointly custody a federation's Bitcoin. This package runs one and lets you point it at your own Bitcoin node or a remote Esplora.
 
 - **Upstream repo:** <https://github.com/fedimint/fedimint>
 - **Wrapper repo:** <https://github.com/Start9-Community/fedimint-guardian-startos>
@@ -60,8 +60,6 @@ Two volumes, plus a conditional view of Bitcoin's.
 | Bitcoin's `main` (ro) | `/mnt/bitcoin` | The RPC cookie — **only** when using a local node |
 
 The Bitcoin mount is added only when a local node is selected, so a guardian running against Esplora mounts nothing.
-
-`/fedimintd` holds two things that matter to a restore: the **live database**, and a directory of **database checkpoints** the guardian writes itself. The distinction is what makes this package's backup work — see [Backups and Restore](#backups-and-restore).
 
 ## File Models
 
@@ -165,29 +163,19 @@ A service that will not start at all, with no failing check, is most likely the 
 
 ## Backups and Restore
 
-Both volumes are backed up, **with the live database excluded and a checkpoint restored in its place.**
+Both volumes are copied whole, with the service stopped, so the guardian's live database and its checkpoints are captured together at a consistent point. Only the database's lock file is excluded.
 
-That is the whole design, and it is worth understanding:
-
-- **The live database and its lock file are excluded.** Copying a running database produces a torn snapshot, and for a consensus participant a corrupt or half-written database is worse than none.
-- **The guardian's own checkpoints are included**, since it writes them for exactly this purpose.
-- **On restore, the newest checkpoint is copied into place as the database** — but only if no database is already there. A restore over a live install leaves the existing database alone rather than overwriting it.
-
-So a restored guardian resumes from its most recent checkpoint rather than from the moment the backup was taken. It needs its Bitcoin backend present on the new server, and it rejoins its federation from the restored state.
-
-**A guardian is one of several.** The federation's safety comes from its threshold, not from this backup — but a guardian restored from a checkpoint that is too old may need the others to catch it up.
+A restored guardian resumes from the moment the backup was taken. It needs its Bitcoin backend present on the new server, and it rejoins its federation from the restored state.
 
 ## Limitations and Differences
 
-1. **The live database is never backed up**, only checkpoints. A restore rewinds to the newest one.
-2. **A restore will not overwrite an existing database**, so restoring onto a live install is a no-op for the database.
-3. **A Bitcoin backend must be chosen and a password set before the service will start.** Neither has a default.
-4. **Esplora is a third party**, and a guardian's queries to it are informative about the federation.
-5. **Mainnet only.** The network is fixed in the package.
-6. **Federation setup is not managed here.** Creating or joining one is a coordinated ceremony in the guardian's own interface.
-7. **No peer port is exported.** Guardian-to-guardian traffic uses the transport the daemon manages itself.
-8. **The dashboard password is stored in plaintext**, because `fedimintd` accepts no other form. Replacing it is the only recovery; it cannot be read back out of the daemon.
-9. **Guardian admin over the public API is left disabled.** `FM_PASSWORD_API` is not set, so the admin RPCs `fedimintd` serves on its network-reachable API return 401, as upstream defaults them to. The federation's ordinary client traffic is unaffected; the dashboard is the only administration surface.
+1. **A Bitcoin backend must be chosen and a password set before the service will start.** Neither has a default.
+2. **Esplora is a third party**, and a guardian's queries to it are informative about the federation.
+3. **Mainnet only.** The network is fixed in the package.
+4. **Federation setup is not managed here.** Creating or joining one is a coordinated ceremony in the guardian's own interface.
+5. **No peer port is exported.** Guardian-to-guardian traffic uses the transport the daemon manages itself.
+6. **The dashboard password is stored in plaintext**, because `fedimintd` accepts no other form. Replacing it is the only recovery; it cannot be read back out of the daemon.
+7. **Guardian admin over the public API is left disabled.** `FM_PASSWORD_API` is not set, so the admin RPCs `fedimintd` serves on its network-reachable API return 401, as upstream defaults them to. The federation's ordinary client traffic is unaffected; the dashboard is the only administration surface.
 
 ---
 
