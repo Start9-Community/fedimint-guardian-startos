@@ -12,6 +12,8 @@ A Fedimint federation is set up by a small group of guardians (typically 3, 5, o
 
 ## Getting set up
 
+Before creating a federation, confirm that every guardian runs the same Fedimint release, including the patch version. Check the version shown in each Guardian Dashboard; StartOS package revision suffixes do not need to match. Setup codes from a different Fedimint release are rejected.
+
 Before the service can start, you must tell it where to get Bitcoin data and set the password that protects the dashboard. After install, StartOS posts two critical tasks:
 
 1. Run the **Bitcoin Configuration** task. Pick either:

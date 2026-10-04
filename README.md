@@ -35,7 +35,7 @@ A [Fedimint](https://github.com/fedimint/fedimint) guardian is one of the server
 
 ## Image and Container Runtime
 
-One image, built here from upstream source.
+One image, built here by extending upstream's published `fedimint/fedimintd` image. The Dockerfile materializes its account-lookup files for the StartOS container runtime.
 
 | Property      | Value                               |
 | ------------- | ----------------------------------- |
@@ -115,6 +115,8 @@ Install seeds the store and raises two critical tasks: choose the Bitcoin backen
 Both checks are **reactive**: each is raised on any init that finds its field unset, not only on install. A guardian upgrading from a release before 0.12.0 has its password carried over from `password.private` by the migration, so the password task never appears for it.
 
 Once started, everything else happens in the guardian's own interface: this is where a federation is created or joined, and where the other guardians' details are exchanged. **That setup is a one-time, coordinated ceremony among the guardians** — the package has no part in it and cannot repeat it.
+
+A setup-code version mismatch is distinct from a consensus connectivity failure in an existing federation. The setup check compares the upstream release, not the StartOS wrapper revision; the package cannot bypass it.
 
 ## Actions
 
