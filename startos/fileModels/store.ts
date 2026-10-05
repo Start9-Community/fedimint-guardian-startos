@@ -3,11 +3,11 @@ import { sdk } from '../sdk'
 import { z } from 'zod'
 
 const bitcoindVariant = z.object({
-  type: z.literal('bitcoind').catch('bitcoind' as const),
+  type: z.literal('bitcoind'),
 })
 
 const esploraVariant = z.object({
-  type: z.literal('esplora').catch('esplora' as const),
+  type: z.literal('esplora'),
   url: z.string().catch('https://mempool.space/api'),
 })
 
