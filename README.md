@@ -104,7 +104,7 @@ One interface.
 | ------------------ | ---- | ---- | ---- | ------------------------------------------- |
 | Guardian Interface | `ui` | ui   | 8175 | Initial setup and this guardian's dashboard |
 
-Bound on the `ui-multi` MultiHost over HTTP and not masked.
+Bound on the `ui-multi` MultiHost over HTTP and not masked. The `main` host that the StartOS 0.3.5 package bound is retired on update to 0.12.1:2; none of its addresses carry over to `ui-multi`.
 
 **Federation peers are reached over a transport the guardian manages itself**, not through a StartOS binding — the package enables it and does not export a port for it. So there is no peer interface to configure or to share with the other guardians; what they exchange during setup is handled in the interface above.
 
@@ -137,6 +137,7 @@ Generates the password gating the Guardian Dashboard and returns it once, masked
 
 - **What it changes:** the password in the store, and therefore `FM_PASSWORD_UI` on the daemon.
 - **Cost:** a running guardian restarts to apply it, which pauses its participation in consensus for as long as the restart takes.
+- **Confirmation:** once a password exists, StartOS shows a warning that it will be replaced and asks before running.
 - **Repeat safety:** safe, and it is the reset path — each run replaces the stored password. Nothing else derives from it, so a guardian cannot be locked out of its own configuration by rotating.
 - **What to weigh:** the value is shown once. A guardian that loses it runs the action again rather than recovering the old one.
 

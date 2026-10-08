@@ -18,13 +18,13 @@ const dict = {
 
   // actions/configBitcoin.ts
   'Bitcoin Configuration': 6,
-  "Configure the Guardian's Bitcoin backend": 7,
+  'Choose where the guardian gets its Bitcoin data. Saving a change restarts a running guardian.': 7,
   'Bitcoin Backend': 8,
-  'Choose how the Guardian connects to the Bitcoin network': 9,
+  "- Local node: uses Bitcoin on this server, which must be installed and fully synced. The guardian's queries stay on this server.\n- Esplora: uses an Esplora API on the internet, with nothing else to install. Its operator sees the guardian's queries, which reveal what the federation is doing.": 9,
   'Local node (recommended)': 10,
   Esplora: 11,
   'Esplora API URL': 12,
-  'The URL of the Esplora API to use': 13,
+  "The Esplora API's base URL, including its path, such as https://mempool.space/api.": 13,
   'Must be a valid HTTP(S) URL': 14,
 
   // actions/setGuardianPassword.ts
@@ -32,6 +32,7 @@ const dict = {
   'Generate a new password for signing in to the Guardian Dashboard. Running this on a live guardian restarts it to apply the new password.': 23,
   'Guardian Password': 24,
   'Use this password to sign in to the Guardian Dashboard': 25,
+  'This replaces the Guardian Dashboard password. The current password stops working, and a running guardian restarts to apply the new one.': 27,
 
   // init/tasksOnInstall.ts
   'Fedimint needs to know which Bitcoin backend to use': 17,
