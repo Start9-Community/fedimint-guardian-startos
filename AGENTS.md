@@ -18,15 +18,23 @@ Freshly scaffolded? Work the
 guide page, not a file in this repo — read it, don't copy it in.
 
 Keep `README.md` (technical reference for an AI support or administering agent) and
-`instructions.md` (end-user docs) in sync with your changes.
+`instructions.md` (end-user docs) in sync with your changes. This file restates neither:
+whoever changes the package has both, so it carries only what they don't — repo mechanics,
+a change that looks right and is not, where the next thing gets added, a naming trap, a
+build or test invocation particular to this repo.
 
-**Bugs and feature requests are GitHub issues on this repo** — file them as you find them.
+**Fix a defect you spot rather than reporting it** — you have the package open and the
+context to be sure. File **a GitHub issue on this repo** only when the call isn't yours to
+make: you can't pin the cause down, two defensible fixes exist, or it's too large to ride on
+the work in hand. An open issue is a report, not a queue — implement one when you're asked
+to or when it's labelled `Approved`, then close it with `Closes #<n>`.
+
 Don't record work in the repo instead: no `TODO.md`, no `NOTES.md`, no `PLAN.md`. What you
 verified, tried, and decided belongs in the commit message and the PR body.
 
 ## This repo
 
-- **`ssl: false` on bitcoind's RPC lookup.** That binding publishes a plaintext _and_ a TLS bridge address; the host id comes from `bitcoin-core-startos/startos/utils` rather than a hardcoded hostname.
-- **Throwing on an unresolvable address or an unreadable cookie is deliberate.** A guardian that starts against a half-configured Bitcoin backend is worse than one that refuses and says which piece is missing.
-- **Don't exclude the live database from backups in favour of `db_checkpoints`.** StartOS backs up with the service stopped, so the live database is consistent, and a checkpoint rewinds the guardian.
-- **The migrations address volumes as `/media/startos/volumes/<name>`** — the container runtime's own mount of them, the same convention used across the fleet. That is a different vantage point from the host path you see over SSH (`/media/startos/data/package-data/volumes/…`); don't "correct" one into the other. Renaming a volume means editing these literals.
+- **Keep `ssl: false` on bitcoind's RPC bridge lookup** — that binding publishes a TLS address too, and the guardian speaks plain HTTP to it.
+- **Keep `main` throwing on an unresolvable Bitcoin address or an unreadable cookie** — a guardian started against a half-configured backend is worse than one that refuses.
+- **Don't exclude the live database from backups in favour of `db_checkpoints`** — backups run with the service stopped, and a checkpoint rewinds the guardian.
+- **The migrations address volumes as `/media/startos/volumes/<name>`**, the container runtime's mount, not the host path seen over SSH; renaming a volume means editing these literals.

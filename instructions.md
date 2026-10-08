@@ -38,4 +38,4 @@ After setup, the Guardian Interface is your dashboard for federation operations:
 ### Actions
 
 - **Bitcoin Configuration** — switch between a local Bitcoin node and a remote Esplora API at any time. Re-run this if you initially picked Esplora and later install Bitcoin (or vice versa).
-- **Set Guardian Password** — generate the password used to sign in to the Guardian Dashboard, and show it once. Run it again to replace a password you have lost or want to change; a running guardian restarts to pick the new one up.
+- **Set Guardian Password** — generate the password used to sign in to the Guardian Dashboard, and show it once. Run it again to replace a password you have lost or want to change; StartOS asks you to confirm first, since the old password stops working, and a running guardian restarts to pick the new one up.

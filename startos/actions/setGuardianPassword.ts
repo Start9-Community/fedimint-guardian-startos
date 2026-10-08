@@ -5,16 +5,20 @@ import { sdk } from '../sdk'
 
 export const setGuardianPassword = sdk.Action.withoutInput(
   'set-guardian-password',
-  {
+  async ({ effects }) => ({
     name: i18n('Set Guardian Password'),
     description: i18n(
       'Generate a new password for signing in to the Guardian Dashboard. Running this on a live guardian restarts it to apply the new password.',
     ),
-    warning: null,
+    warning: (await storeJson.read((s) => s.guardianPassword).const(effects))
+      ? i18n(
+          'This replaces the Guardian Dashboard password. The current password stops working, and a running guardian restarts to apply the new one.',
+        )
+      : null,
     allowedStatuses: 'any',
     group: null,
     visibility: 'enabled',
-  },
+  }),
   async ({ effects }) => {
     const guardianPassword = utils.getDefaultString({
       charset: 'a-z,A-Z,0-9',

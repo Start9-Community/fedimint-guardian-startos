@@ -1,12 +1,11 @@
-import { FileHelper } from '@start9labs/start-sdk'
+import { FileHelper, z } from '@start9labs/start-sdk'
 import { sdk } from '../sdk'
-import { z } from 'zod'
 
-const bitcoindVariant = z.object({
+const bitcoindVariant = z.looseObject({
   type: z.literal('bitcoind'),
 })
 
-const esploraVariant = z.object({
+const esploraVariant = z.looseObject({
   type: z.literal('esplora'),
   url: z.string().catch('https://mempool.space/api'),
 })
@@ -20,7 +19,7 @@ const bitcoinBackend = z
 
 const guardianPassword = z.string().optional()
 
-const shape = z.object({
+const shape = z.looseObject({
   bitcoinBackend,
   guardianPassword,
 })

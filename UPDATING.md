@@ -23,7 +23,7 @@ The `fedimintd` image is built locally from `Dockerfile`, which extends the upst
 - **`Dockerfile`** — bump the `FROM fedimint/fedimintd:v<version>` line to the new upstream tag.
 - **`startos/versions/current.ts`** — match the full upstream version, reset the wrapper revision to `:0`, and update the localized release notes. Preserve historical migrations according to the packaging guide.
 - **`README.md` and `instructions.md`** — review any changed behavior and keep both accurate.
-- Run `npm ci`, `npm run check`, `npx prettier --check startos`, and `make` to build both supported architectures. Check the built image's `fedimintd --version`.
+- Run `npm ci` and `make`, which type-checks, checks formatting, and builds both supported architectures. Check the built image's `fedimintd --version`.
 
 ## Guardian setup compatibility
 
