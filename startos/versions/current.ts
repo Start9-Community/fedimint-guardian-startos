@@ -1,34 +1,21 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
-import { sdk } from '../sdk'
 
 export const current = VersionInfo.of({
-  version: '0.12.1:2',
+  version: '0.12.2:0',
   releaseNotes: {
-    en_US: `- Set Guardian Password asks for confirmation before replacing an existing password.
-- Bitcoin Configuration explains what each backend means for the guardian.
-- The interface left over from the StartOS 0.3.5 version of this service is removed. A domain or .onion address added to it no longer reaches the guardian; add one to the Guardian Interface instead.
-- Bitcoin must be at least 28.4:29, 29.4:16, 30.3:16 or 31.1:16, depending on its major version. Bitcoin Knots (pre-RDTS) 29.3:29 or later also works.`,
-    es_ES: `- Establecer Contraseña del Guardián pide confirmación antes de reemplazar una contraseña existente.
-- Configuración de Bitcoin explica qué implica cada backend para el guardián.
-- Se elimina la interfaz que quedaba de la versión de este servicio para StartOS 0.3.5. Un dominio o una dirección .onion añadidos a ella ya no llegan al guardián; añade uno a la Interfaz del Guardián.
-- Bitcoin debe ser al menos la versión 28.4:29, 29.4:16, 30.3:16 o 31.1:16, según su versión principal. También funciona Bitcoin Knots (pre-RDTS) 29.3:29 o posterior.`,
-    de_DE: `- Guardian-Passwort festlegen fragt nach einer Bestätigung, bevor ein vorhandenes Passwort ersetzt wird.
-- Bitcoin-Konfiguration erklärt, was jedes Backend für den Guardian bedeutet.
-- Die von der StartOS-0.3.5-Version dieses Dienstes verbliebene Schnittstelle wird entfernt. Eine dort hinzugefügte Domain oder .onion-Adresse erreicht den Guardian nicht mehr; füge stattdessen eine zur Guardian-Schnittstelle hinzu.
-- Bitcoin muss je nach Hauptversion mindestens 28.4:29, 29.4:16, 30.3:16 oder 31.1:16 sein. Bitcoin Knots (pre-RDTS) ab 29.3:29 funktioniert ebenfalls.`,
-    pl_PL: `- Ustaw Hasło Strażnika prosi o potwierdzenie przed zastąpieniem istniejącego hasła.
-- Konfiguracja Bitcoin wyjaśnia, co każdy backend oznacza dla strażnika.
-- Usunięto interfejs pozostały po wersji tej usługi dla StartOS 0.3.5. Domena lub adres .onion dodane do niego nie prowadzą już do strażnika; dodaj je do Interfejsu Strażnika.
-- Bitcoin musi być co najmniej w wersji 28.4:29, 29.4:16, 30.3:16 lub 31.1:16, zależnie od wersji głównej. Działa też Bitcoin Knots (pre-RDTS) 29.3:29 lub nowszy.`,
-    fr_FR: `- Définir le mot de passe du Guardian demande une confirmation avant de remplacer un mot de passe existant.
-- Configuration Bitcoin explique ce que chaque backend implique pour le guardian.
-- L’interface laissée par la version de ce service pour StartOS 0.3.5 est supprimée. Un domaine ou une adresse .onion qui lui a été ajouté n’atteint plus le guardian ; ajoutez-en un à l’Interface Guardian.
-- Bitcoin doit être au moins en version 28.4:29, 29.4:16, 30.3:16 ou 31.1:16, selon sa version majeure. Bitcoin Knots (pre-RDTS) 29.3:29 ou plus récent fonctionne aussi.`,
+    en_US:
+      'Updated Fedimint to 0.12.2, which makes guardian connections to their peers more reliable. All guardians setting up a new federation together must use the same release, including the patch version. Full notes: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+    es_ES:
+      'Fedimint actualizado a 0.12.2, que hace más fiables las conexiones del guardián con sus pares. Todos los guardianes que configuren juntos una nueva federación deben usar la misma versión, incluida la versión de parche. Notas completas: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+    de_DE:
+      'Fedimint auf 0.12.2 aktualisiert, wodurch die Verbindungen des Guardians zu seinen Peers zuverlässiger werden. Alle Guardians, die gemeinsam eine neue Föderation einrichten, müssen dieselbe Version einschließlich der Patch-Version verwenden. Vollständige Versionshinweise: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+    pl_PL:
+      'Zaktualizowano Fedimint do 0.12.2, co zwiększa niezawodność połączeń strażnika z pozostałymi strażnikami. Wszyscy strażnicy wspólnie tworzący nową federację muszą używać tego samego wydania, łącznie z numerem poprawki. Pełne informacje o wydaniu: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+    fr_FR:
+      'Fedimint mis à jour vers 0.12.2, qui rend plus fiables les connexions du guardian avec ses pairs. Tous les guardians qui configurent ensemble une nouvelle fédération doivent utiliser la même version, y compris le numéro de correctif. Notes complètes : https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
   },
   migrations: {
-    up: async ({ effects }) => {
-      await sdk.MultiHost.of(effects, 'main').retire()
-    },
+    up: async ({ effects }) => {},
     down: IMPOSSIBLE,
   },
 })
