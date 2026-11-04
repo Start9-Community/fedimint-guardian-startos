@@ -21,12 +21,7 @@ The `fedimintd` image is built locally from `Dockerfile`, which extends the upst
 ## Applying the bump
 
 - **`Dockerfile`** — bump the `FROM fedimint/fedimintd:v<version>` line to the new upstream tag.
-- **`startos/versions/current.ts`** — match the full upstream version, reset the wrapper revision to `:0`, and update the localized release notes. Preserve historical migrations according to the packaging guide.
-- **`README.md` and `instructions.md`** — review any changed behavior and keep both accurate.
-- Run `npm ci` and `make`, which type-checks, checks formatting, and builds both supported architectures. Check the built image's `fedimintd --version`.
 
 ## Guardian setup compatibility
 
-New federation setup compares the exact upstream `x.y.z` release in guardian setup codes, including the patch version; StartOS wrapper revisions are not compared. Track patch releases even when upstream describes them as gateway-only and says existing guardians need not upgrade. That guidance does not remove the setup-version check: a guardian on the previous patch cannot create a new federation with guardians on the new patch.
-
-Do not bypass the upstream check. Bump the packaged daemon so users can coordinate on the same release. Distinguish setup-code rejection from a consensus or connectivity failure in an already configured federation.
+New federation setup compares the exact upstream `x.y.z` release in guardian setup codes, including the patch version; StartOS wrapper revisions are not compared. Track patch releases even when upstream describes them as gateway-only and says existing guardians need not upgrade. That guidance does not remove the setup-version check: a guardian on the previous patch cannot create a new federation with guardians on the new patch. Do not bypass the upstream check.
