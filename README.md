@@ -160,6 +160,8 @@ One check, on the only daemon.
 | ----------- | -------------------- | ---------------------- |
 | `fedimintd` | "Guardian Dashboard" | Port 8175 is listening |
 
+With a local node selected and an installed Bitcoin too old to publish its `public` volume, the guardian mounts nothing from it and runs no daemon: a lone `bitcoin` check, "Bitcoin Connection", fails and asks for Bitcoin to be updated. The installed manifest is watched, so updating Bitcoin starts the guardian normally.
+
 It reports that the dashboard is serving. It says nothing about whether the federation has reached consensus, whether the other guardians are reachable, or whether setup was completed — all of which are visible in the dashboard.
 
 A service that will not start at all, with no failing check, is most likely the Bitcoin backend: an unresolvable address or an unreadable cookie, named in the error. A service that will not start _and_ shows a critical task is waiting on that task, not failing.

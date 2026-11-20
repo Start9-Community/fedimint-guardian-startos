@@ -27,6 +27,27 @@ export const main = sdk.setupMain(async ({ effects }) => {
   }
   const { bitcoinBackend, guardianPassword } = store
 
+  if (bitcoinBackend.type === 'bitcoind') {
+    // An older Bitcoin lacks the public volume, and mounting a missing volume fails the start.
+    const hasRpcVolume = await sdk
+      .getServiceManifest(effects, 'bitcoind', (m) =>
+        m?.volumes.includes(rpcVolumeId),
+      )
+      .const()
+    if (hasRpcVolume === false) {
+      return sdk.Daemons.of(effects).addHealthCheck('bitcoin', {
+        ready: {
+          display: i18n('Bitcoin Connection'),
+          fn: () => ({
+            result: 'failure',
+            message: i18n('Update Bitcoin so the guardian can connect to it'),
+          }),
+        },
+        requires: [],
+      })
+    }
+  }
+
   const env: Record<string, string> = {
     FM_DATA_DIR: '/fedimintd',
     FM_BITCOIN_NETWORK: 'bitcoin',

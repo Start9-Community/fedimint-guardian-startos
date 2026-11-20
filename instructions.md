@@ -17,7 +17,7 @@ Before creating a federation, confirm that every guardian runs the same Fedimint
 Before the service can start, you must tell it where to get Bitcoin data and set the password that protects the dashboard. After install, StartOS posts two critical tasks:
 
 1. Run the **Bitcoin Configuration** task. Pick either:
-   - **Local node (recommended)** — uses the Bitcoin dependency. Install Bitcoin first if you haven't; the guardian will read its cookie automatically.
+   - **Local node (recommended)** — uses the Bitcoin dependency. Install Bitcoin first if you haven't; the guardian will read its cookie automatically. If the guardian's **Bitcoin Connection** check asks you to update Bitcoin, install Bitcoin's update; the guardian starts on its own once it is done.
    - **Esplora** — point at an Esplora API (defaults to `https://mempool.space/api`).
 2. Run the **Set Guardian Password** task. It generates a password and shows it once — copy it somewhere safe before closing the result. (Upgrading from a release before 0.12.0? This task does not appear: your guardian keeps the password you already use.)
 3. Start the service and open the **Guardian Interface**, signing in with that password.
