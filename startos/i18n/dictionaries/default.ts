@@ -37,6 +37,8 @@ const dict = {
   // init/tasksOnInstall.ts
   'Fedimint needs to know which Bitcoin backend to use': 17,
   'The Guardian Dashboard is served without a login until a password is set': 26,
+  'Bitcoin Connection': 28,
+  'Update Bitcoin so the guardian can connect to it': 29,
 } as const
 
 /**

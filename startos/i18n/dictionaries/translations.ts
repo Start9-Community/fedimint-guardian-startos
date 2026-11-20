@@ -29,6 +29,8 @@ export default {
     25: 'Utiliza esta contraseña para iniciar sesión en el Panel del Guardián',
     26: 'El Panel del Guardián se sirve sin inicio de sesión hasta que se establezca una contraseña',
     27: 'Esto reemplaza la contraseña del Panel del Guardián. La contraseña actual deja de funcionar y un guardián en marcha se reinicia para aplicar la nueva.',
+    28: 'Conexión con Bitcoin',
+    29: 'Actualiza Bitcoin para que el guardián pueda conectarse a él',
   },
   de_DE: {
     0: 'Fedimint wird gestartet!',
@@ -58,6 +60,8 @@ export default {
     25: 'Verwende dieses Passwort, um dich am Guardian-Dashboard anzumelden',
     26: 'Das Guardian-Dashboard wird ohne Anmeldung ausgeliefert, bis ein Passwort festgelegt ist',
     27: 'Dies ersetzt das Passwort des Guardian-Dashboards. Das aktuelle Passwort funktioniert nicht mehr, und ein laufender Guardian startet neu, um das neue zu übernehmen.',
+    28: 'Bitcoin-Verbindung',
+    29: 'Aktualisiere Bitcoin, damit sich der Guardian damit verbinden kann',
   },
   pl_PL: {
     0: 'Uruchamianie Fedimint!',
@@ -87,6 +91,8 @@ export default {
     25: 'Użyj tego hasła, aby zalogować się do Panelu Strażnika',
     26: 'Panel Strażnika jest udostępniany bez logowania, dopóki nie zostanie ustawione hasło',
     27: 'To zastępuje hasło do Panelu Strażnika. Obecne hasło przestaje działać, a działający strażnik restartuje się, aby zastosować nowe.',
+    28: 'Połączenie z Bitcoinem',
+    29: 'Zaktualizuj Bitcoin, aby strażnik mógł się z nim połączyć',
   },
   fr_FR: {
     0: 'Démarrage de Fedimint !',
@@ -116,5 +122,7 @@ export default {
     25: 'Utilisez ce mot de passe pour vous connecter au tableau de bord Guardian',
     26: 'Le tableau de bord Guardian est servi sans authentification tant qu’aucun mot de passe n’est défini',
     27: 'Ceci remplace le mot de passe du tableau de bord Guardian. Le mot de passe actuel cesse de fonctionner, et un guardian en fonctionnement redémarre pour appliquer le nouveau.',
+    28: 'Connexion à Bitcoin',
+    29: 'Mettez Bitcoin à jour pour que le guardian puisse s’y connecter',
   },
 } satisfies Record<string, LangDict>
