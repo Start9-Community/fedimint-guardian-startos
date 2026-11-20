@@ -1,6 +1,11 @@
 import { FileHelper } from '@start9labs/start-sdk'
 import { manifest as bitcoinManifest } from 'bitcoin-core-startos/startos/manifest'
-import { rpcHostId, rpcPort } from 'bitcoin-core-startos/startos/utils'
+import {
+  rpcCookieName,
+  rpcHostId,
+  rpcPort,
+  rpcVolumeId,
+} from 'bitcoin-core-startos/startos/utils'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
 import { storeJson } from './fileModels/store'
@@ -54,7 +59,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   if (bitcoinBackend.type === 'bitcoind') {
     mounts = mounts.mountDependency<typeof bitcoinManifest>({
       dependencyId: 'bitcoind',
-      volumeId: 'main',
+      volumeId: rpcVolumeId,
       subpath: null,
       mountpoint: '/mnt/bitcoin',
       readonly: true,
@@ -93,7 +98,9 @@ export const main = sdk.setupMain(async ({ effects }) => {
     // an absent cookie means bitcoind is down, and restarting then throws
     // below rather than picking up credentials that do not exist yet.
     const rootfs = await fedimintdSubc.rootfs
-    const cookieRaw = await FileHelper.string(`${rootfs}/mnt/bitcoin/.cookie`)
+    const cookieRaw = await FileHelper.string(
+      `${rootfs}/mnt/bitcoin/${rpcCookieName}`,
+    )
       .read(
         (cookie) => cookie,
         (prev, next) => next === null || prev === next,

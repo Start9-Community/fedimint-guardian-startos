@@ -53,13 +53,13 @@ Everything the guardian needs is passed as environment; nothing is templated int
 
 Two volumes, plus a conditional view of Bitcoin's.
 
-| Volume                | Mount Point    | Purpose                                           |
-| --------------------- | -------------- | ------------------------------------------------- |
-| `main`                | —              | The package store                                 |
-| `fedimintd`           | `/fedimintd`   | The guardian's database and its checkpoints       |
-| Bitcoin's `main` (ro) | `/mnt/bitcoin` | The RPC cookie — **only** when using a local node |
+| Volume                  | Mount Point    | Purpose                                                                |
+| ----------------------- | -------------- | ---------------------------------------------------------------------- |
+| `main`                  | —              | The package store                                                      |
+| `fedimintd`             | `/fedimintd`   | The guardian's database and its checkpoints                            |
+| Bitcoin's `public` (ro) | `/mnt/bitcoin` | The RPC `.cookie` Bitcoin publishes — **only** when using a local node |
 
-The Bitcoin mount is added only when a local node is selected, so a guardian running against Esplora mounts nothing.
+The Bitcoin mount is added only when a local node is selected, so a guardian running against Esplora mounts nothing. It is Bitcoin's `public` volume, which holds only the credentials Bitcoin publishes for dependents, never its chain data or `bitcoin.conf`.
 
 ## File Models
 

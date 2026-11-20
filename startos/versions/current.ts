@@ -1,18 +1,18 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.12.2:0',
+  version: '0.12.2:1',
   releaseNotes: {
     en_US:
-      'Updated Fedimint to 0.12.2, which makes guardian connections to their peers more reliable. All guardians setting up a new federation together must use the same release, including the patch version. Full notes: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+      "Requires StartOS 0.4.2 or later. With a local Bitcoin node, the guardian reads only the RPC credential Bitcoin publishes for dependent services, and none of Bitcoin's other data. Requires a current Bitcoin release; update Bitcoin first if StartOS reports its version as unsupported.",
     es_ES:
-      'Fedimint actualizado a 0.12.2, que hace más fiables las conexiones del guardián con sus pares. Todos los guardianes que configuren juntos una nueva federación deben usar la misma versión, incluida la versión de parche. Notas completas: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+      'Requiere StartOS 0.4.2 o posterior. Con un nodo Bitcoin local, el guardián lee solo la credencial RPC que Bitcoin publica para los servicios dependientes, y ningún otro dato de Bitcoin. Requiere una versión actual de Bitcoin; actualice Bitcoin primero si StartOS indica que su versión no es compatible.',
     de_DE:
-      'Fedimint auf 0.12.2 aktualisiert, wodurch die Verbindungen des Guardians zu seinen Peers zuverlässiger werden. Alle Guardians, die gemeinsam eine neue Föderation einrichten, müssen dieselbe Version einschließlich der Patch-Version verwenden. Vollständige Versionshinweise: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+      'Erfordert StartOS 0.4.2 oder neuer. Mit einem lokalen Bitcoin-Knoten liest der Guardian nur die RPC-Zugangsdaten, die Bitcoin für abhängige Dienste veröffentlicht, und keine anderen Daten von Bitcoin. Erfordert eine aktuelle Bitcoin-Version; aktualisieren Sie zuerst Bitcoin, wenn StartOS dessen Version als nicht unterstützt meldet.',
     pl_PL:
-      'Zaktualizowano Fedimint do 0.12.2, co zwiększa niezawodność połączeń strażnika z pozostałymi strażnikami. Wszyscy strażnicy wspólnie tworzący nową federację muszą używać tego samego wydania, łącznie z numerem poprawki. Pełne informacje o wydaniu: https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+      'Wymaga StartOS 0.4.2 lub nowszego. Przy lokalnym węźle Bitcoin strażnik odczytuje tylko dane uwierzytelniające RPC, które Bitcoin udostępnia usługom zależnym, i żadnych innych danych Bitcoin. Wymaga aktualnej wersji Bitcoin; najpierw zaktualizuj Bitcoin, jeśli StartOS zgłasza jego wersję jako nieobsługiwaną.',
     fr_FR:
-      'Fedimint mis à jour vers 0.12.2, qui rend plus fiables les connexions du guardian avec ses pairs. Tous les guardians qui configurent ensemble une nouvelle fédération doivent utiliser la même version, y compris le numéro de correctif. Notes complètes : https://github.com/fedimint/fedimint/releases/tag/v0.12.2',
+      "Nécessite StartOS 0.4.2 ou ultérieur. Avec un nœud Bitcoin local, le guardian lit uniquement l'identifiant RPC que Bitcoin publie pour les services dépendants, et aucune autre donnée de Bitcoin. Nécessite une version à jour de Bitcoin ; mettez d'abord Bitcoin à jour si StartOS indique que sa version n'est pas prise en charge.",
   },
   migrations: {
     up: async ({ effects }) => {},
